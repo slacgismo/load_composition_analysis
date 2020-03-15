@@ -446,7 +446,7 @@ def selftest():
 
     The selftest uses the file 'testdata.csv' and prints the following output.
 
-           Pbase   Pheat   Pcool  Tmin  Theat  Tcool  Tmax  Sbase  Sheat  Scool
+         Pbase   Pheat   Pcool   Tmin  Theat  Tcool  Tmax  Sbase  Sheat  Scool
     Hour                                                                       
     0    1,779.5 2,667.5 2,560.3 22.9  51.2   61.2   79.8  1.6    -31.4  41.9  
     1    1,704.0 2,616.7 2,246.5 22.6  50.7   60.7   75.5  2.3    -32.4  36.9  
