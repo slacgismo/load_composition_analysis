@@ -42,7 +42,7 @@ def anonymize(ifile,ofile,anon_data={1:[1,-1]},hide_data={2:[0,-1]},anon_prefix=
 
 def selftest():
 	ifile = 'testdata.csv'
-	ofile = 'anondata.csv'
+	ofile = 'testdata-anon.csv'
 	print(f"Anonymizing '{ifile}' into '{ofile}'")
 	res = anonymize(ifile,ofile)
 	print(f"rows scanned........ {res['rows']}")
