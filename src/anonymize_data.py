@@ -1,6 +1,6 @@
 import csv
 
-def anonymize(ifile,ofile,anon_data={1:[1,-1]},hide_data={2:[0,-1]},anon_prefix="anon",hide_value=''):
+def anonymize(ifile,ofile,anon_data={1:[1,-1]},hide_data={},anon_prefix="anon",hide_value=''):
 	"""Anonymize a CSV file
 
 	Parameters:
