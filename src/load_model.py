@@ -11,13 +11,13 @@ class config:
 
 Load modeling:
 
-    Tdiff    Difference between the heating and cooling balance temperatures
+    Tdiff   Difference between the heating and cooling balance temperatures
             (default 10 degF)
 
-    Tbase    Base temperature for the heating and cooling balance temperature 
+    Tbase   Base temperature for the heating and cooling balance temperature 
             (default is 60 degF)
 
-    Days     Weekdays to include in developing the load model 
+    Days    Weekdays to include in developing the load model 
             (default is Monday through Friday, i.e., [0,1,2,3,4])
 
 Row filtering:
@@ -25,10 +25,10 @@ Row filtering:
     Tmin    The minimum temperature to accept (inclusive) when loading data
             (default is -50 degF)
 
-    Tmax     The maximum temperature to accept (inclusive) when loading data
+    Tmax    The maximum temperature to accept (inclusive) when loading data
             (default is 130 degF).
 
-    Pmin     The minimum power to accept (exclusive) when loading data
+    Pmin    The minimum power to accept (exclusive) when loading data
             (default 0)
 
     Pmax    The maximum power to accept (exclusive) when loading data
@@ -36,19 +36,19 @@ Row filtering:
 
 Processing:
 
-    SavePlots         Enables plots of intermediate results to be generated
+    SavePlots       Enables plots of intermediate results to be generated
                     (default False)
 
-    DatetimeFormat    The date/time format to use when reading timestamps
+    DatetimeFormat  The date/time format to use when reading timestamps
                     (default mm/dd/yy HH:MM)
 
-    NullValue         The value used to indicated a bad/missing value
+    NullValue       The value used to indicated a bad/missing value
                     (default NaN)
 
-    SkipRows         The number of rows to skip when loading data
+    SkipRows        The number of rows to skip when loading data
                     (default 1)
 
-    MaxIterations     The maximum number of iterations allowing when getting
+    MaxIterations   The maximum number of iterations allowing when getting
                     the base temperature (default 50)
 
     """
@@ -101,17 +101,26 @@ def load_data(ifile,
     Load data from CSV file
 
     Parameters:
-        ifile (str)                    input file name
-        datetime_col (datetime)        datetime column number (default 0)
-        power_col (int)                power column number (default 1)
+    
+        ifile (str)                  input file name
+
+        datetime_col (datetime)      datetime column number (default 0)
+
+        power_col (int)              power column number (default 1)
+
         temperature_col (int)        temperature column number (default 2)
-        humidity (int)                humidity column number (default None)
-        skiprows (int)                 rows skipped when reading (default 1)
-        filter (bool or callable)     filter enable/function (default True)
-        dropna (bool, str, or list) dropna flag, 'any','all', or list of
-                                    column names in which na is found
+        
+        humidity (int)               humidity column number (default None)
+        
+        skiprows (int)               rows skipped when reading (default 1)
+        
+        filter (bool or callable)    filter enable/function (default True)
+        
+        dropna (bool, str, or list)  dropna flag, 'any','all', or list of
+                                     column names in which na is found
 
     Returns:
+
         DataFrame - contains loaded data
 
     The data loader imports the specified CSV file, using the optional column 
@@ -145,11 +154,14 @@ def get_days(data,days=config.Days):
     Get the data for the desired weekdays
 
     Parameters:
+
         data (DataFrame)    data set
-        days (list)            weekdays to include in data
+    
+        days (list)         weekdays to include in data
 
     Returns:
-        DataFrame            data that includes specified weekdays
+    
+        DataFrame           data that includes specified weekdays
     """
     return data[data.index.dayofweek.isin(days)]
 
@@ -158,10 +170,13 @@ def get_hours(data,hours):
     Get the data for the desired hours
 
     Parameters:
+    
         data (DataFrame)    data set
+    
         hours (list)        hours to include in data
 
     Returns:
+    
         DataFrame            data that includes specified hours
     """
     return data[data.index.hour.isin(hours)]
@@ -178,13 +193,14 @@ def get_baseload(data,
     Get the base load model
 
     Parameters:
+
         data (DataFrame)        data to use in computing the baseload
 
-        Tbase (float or 'auto')    base temperature to use, 'auto' will find the
+        Tbase (float or 'auto') base temperature to use, 'auto' will find the
                                 base temperature that minimum the abs(slope)
                                 (default 'auto')
 
-        Tdiff (float)            base load temperature band
+        Tdiff (float)           base load temperature band
                                 (default 10 degF)
 
         MaxSlope (float)        maximum slope allowed when finding base
@@ -194,6 +210,7 @@ def get_baseload(data,
                                 (default 0.1)
 
     Returns:
+
         load (float)        Base load value at Tbase
         
         slope (float)        Slope of the base at Tbase
