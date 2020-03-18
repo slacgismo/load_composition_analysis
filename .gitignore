@@ -126,3 +126,4 @@ dmypy.json
 
 # Local test data files
 src/testdata-*
+data/pge_loads.csv

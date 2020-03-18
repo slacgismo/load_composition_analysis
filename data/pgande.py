@@ -5,7 +5,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 
-
 def get_load_profile(date):
 	buffer = BytesIO()
 	c = pycurl.Curl()
@@ -39,7 +38,11 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days+1)):
         yield start_date + timedelta(n)
 
-def get_loads(start,stop,show_progress=False):
+def get_loads(start,stop,date_format='%m/%d/%y',show_progress=False):
+	if type(start) is str:
+		start = datetime.strptime(start,date_format)
+	if type(stop) is str:
+		stop = datetime.strptime(stop,date_format)
 	result = pd.DataFrame()
 	for date in daterange(start,stop):
 		if show_progress:
@@ -60,5 +63,5 @@ def get_loads(start,stop,show_progress=False):
 	return result
 
 if __name__ == '__main__':
-	data = get_loads(datetime(2020,3,1),datetime(2020,3,31),show_progress=True)
+	data = get_loads('3/1/20','3/14/20',show_progress=True)
 	data.to_csv('pge_loads.csv')
