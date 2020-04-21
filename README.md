@@ -1,3 +1,3 @@
-# Load Modeling for Load Composition Analysis
+# Load Composition Analysis tools
 
-See [Load Model Documentation](http://docs.gridlabd.us/index.html?owner=slacgismo&project=load_model) for information about this project.
+See [Load Composition Analysis documentation](http://docs.gridlabd.us/index.html?owner=slacgismo&project=load_composition_analysis) for information about this project.
