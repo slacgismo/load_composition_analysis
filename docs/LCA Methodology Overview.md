@@ -7,7 +7,7 @@ In 201[?], NERC’s reliability standards were revised to require the use of dyn
 
 In 2019 in anticipation of the compliance date for the new standards, NERC’s Load Modeling Task Force initiated a field test of composite load models for planners in the Eastern Interconnection and ERCOT. In support of the field test, DOE and BPA researchers developed 96 region-specific composite load models for use by transmission planners to represent each of four distinct types of non-industrial feeders. The results were made available to planners in the form of composite load models for a summer peak hour, a winter peak hour, and a spring light-load hour. This report is the technical documentation for the load composition analysis that was conducted to develop these composite load models.
 
-The Role of Load Composition Analysis in Supporting the Development of Composite Load Models
+# The Role of Load Composition Analysis in Supporting the Development of Composite Load Models
 
 Transmission planning studies are conducted using positive-sequence load flow models that simulate the dynamic behavior of the transmission system under stressed conditions. The influence of loads on the dynamic behavior of the system under these conditions is introduced through the use of composite load models.
 
