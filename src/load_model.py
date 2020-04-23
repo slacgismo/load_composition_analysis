@@ -345,7 +345,7 @@ def get_model(ifile, datetime_col, power_col, temperature_col,
     column_list.insert(0,'datetime')
     power_name = column_list[power_col]
     temperature_name = column_list[temperature_col]
-    days = get_days(data=data,days=[0,1,2,3,4])
+    days = get_days(data=data,days=config.Days)
     model = {"Hour":[], 
         "Pbase":[], "Pheat":[], "Pcool":[], 
         "Tmin":[], "Theat":[], "Tcool":[], "Tmax":[], 
