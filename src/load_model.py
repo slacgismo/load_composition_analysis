@@ -283,7 +283,47 @@ def get_sensitivity(heating,cooling,power_name,temperature_name):
 
     return heat_slope, cool_slope
 
-def get_model(ifile, datetime_col, power_col, temperature_col,
+def get_load(model,hour,temperature):
+    """Get loads for given hours and temperature
+    """
+    if type(hour) is int:
+        if type(temperature) is float:
+            Sbase = model["Sbase"][hour]
+            Pbase = model["Pbase"][hour]
+            Theat = model["Theat"][hour]
+            Tcool = model["Tcool"][hour]
+            Tbase = 0.5*Theat + 0.5*Tcool
+            if temperature < Theat:
+                Sheat = model["Sheat"][hour]
+                Theat = model["Theat"][hour]
+                Ptemp = Sbase*(Theat-Tbase) + Sheat*(temperature-Theat)
+            elif temperature > Tcool:
+                Scool = model["Scool"][hour]
+                Tcool = model["Tcool"][hour]
+                Ptemp = Sbase*(Tcool-Tbase) + Scool*(temperature-Tcool)
+            else:
+                Ptemp = Sbase*(temperature-Tbase)
+            return Pbase + Ptemp
+        else:
+            result = []
+            for t in temperature:
+                result.append(get_load(model,hour,float(t)))
+            return result
+    elif type(temperature) is float:
+        result = []
+        for h in hour:
+            result.append(get_load(model,int(h),temperature))
+        return result
+    else:
+        result = []
+        for h in hour:
+            data = []
+            for t in temperature:
+                data.append(get_load(model,int(h),float(t)))
+            result.append(data)
+        return result
+
+def get_model(data, datetime_col, power_col, temperature_col,
         skiprows=config.SkipRows,
         ofile=None,
         saveplots=config.SavePlots):
@@ -291,19 +331,19 @@ def get_model(ifile, datetime_col, power_col, temperature_col,
 
     Parameters:
 
-        ifile (str)                input file name (required)
+        data (DataFrame)          input file name (required)
 
         datetime_col (int)        datetime column number (required)
 
-        power_col (int)            power column number (required)
+        power_col (int)           power column number (required)
 
-        temperature_col (int)    temperature column number (required)
+        temperature_col (int)     temperature column number (required)
 
         skiprows (int)            rows to skip before reading data (default 1)
 
-        ofile (str)                output file name (default None)
+        ofile (str)               output file name (default None)
 
-        saveplots (bool)        plot saving flag (default False)
+        saveplots (bool)          plot saving flag (default False)
 
     Returns:
 
@@ -332,15 +372,6 @@ def get_model(ifile, datetime_col, power_col, temperature_col,
         Scool     cooling load temperature sensitivity (MW/degF)
 
     """
-    if not ifile[-4:] == '.csv':
-        raise Exception(f"ifile={ifile} is not a valid CSV filename")
-    else:
-        name = ifile[0:-4]
-
-    if ofile == 'auto':
-        ofile = f"{name}-model.csv"
-
-    data = load_data(ifile=ifile,datetime_col=datetime_col,power_col=power_col,temperature_col=temperature_col,skiprows=skiprows)
     column_list = list(data.columns)
     column_list.insert(0,'datetime')
     power_name = column_list[power_col]
@@ -456,6 +487,29 @@ def get_model(ifile, datetime_col, power_col, temperature_col,
         plt.close()
 
     return model
+
+def load_electrification(
+        select={},
+        index="location",
+        columns=["city","region","building_type","heat_pump","other_electric_heat","cooling","water_heating","cooking"],
+        convert=pd.DataFrame,
+        vintage='latest'
+        ):
+    """Get load electrification data
+
+    Parameters:
+        select (dict): specifies the row constraints (default is {})
+        index (str or list): specifies rows to use as indexes (default is 'location')
+        columns (str or list): specifies the columns to return (default is all columns)
+        convert (callable or class): specifies the data type to return (default is DataFrame)
+        vintage (str): specifies the vintage of the data to use (default is 'latest')
+
+    Returns: (DataFrame or convert)
+    """
+    data = pd.read_csv(f"electrification_{vintage}.csv")
+    for key,value in select.items():
+        data = data[data[key]==value]
+    return convert(data.set_index(index)[columns])
 
 def selftest():
     """
