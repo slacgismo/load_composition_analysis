@@ -493,7 +493,7 @@ def load_electrification(
         index="location",
         columns=["city","region","building_type","heat_pump","other_electric_heat","cooling","water_heating","cooking"],
         convert=pd.DataFrame,
-        vintage='latest'
+        version='latest'
         ):
     """Get load electrification data
 
@@ -502,11 +502,11 @@ def load_electrification(
         index (str or list): specifies rows to use as indexes (default is 'location')
         columns (str or list): specifies the columns to return (default is all columns)
         convert (callable or class): specifies the data type to return (default is DataFrame)
-        vintage (str): specifies the vintage of the data to use (default is 'latest')
+        version (int or str): specifies the version of the data to use (default is 'latest')
 
     Returns: (DataFrame or convert)
     """
-    data = pd.read_csv(f"electrification_{vintage}.csv")
+    data = pd.read_csv(f"electrification_{version}.csv")
     for key,value in select.items():
         data = data[data[key]==value]
     return convert(data.set_index(index)[columns])
