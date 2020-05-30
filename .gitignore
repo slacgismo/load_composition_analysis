@@ -128,3 +128,4 @@ dmypy.json
 src/testdata-*
 data/pge_loads.csv
 .DS_Store
+~*.docx
