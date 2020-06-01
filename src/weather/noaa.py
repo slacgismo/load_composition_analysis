@@ -11,6 +11,9 @@ import pytz
 UTC = pytz.timezone("UTC")
 my_tzinfo = UTC
 
+def find_csvfile(name):
+    return str(sys.modules[__name__].__file__).replace(f"/noaa.py",f"/{name}")
+
 def set_tzinfo(timezone):
     global my_tzinfo
     my_tzinfo = pytz.timezone(timezone)
@@ -63,7 +66,7 @@ def utchour(data,column,modulo):
 def nop(msg):
     return
 
-def collate_noaa_lcd(filespec, timezone,
+def collate_data(filespec, timezone,
         columns = {
             'DATE': 'localtime',
             'HourlyDryBulbTemperature': 'temperature',
@@ -84,13 +87,15 @@ def collate_noaa_lcd(filespec, timezone,
         saveas = None,
         refresh = 'never'):
     set_tzinfo(timezone)
-    if saveas and os.path.exists(saveas) and refresh == 'never':
-        return pd.read_csv(saveas)
+    if saveas:
+        csvsave = find_csvfile(saveas)
+        if os.path.exists(csvsave) and refresh == 'never':
+            return pd.read_csv(csvsave)
     csvlist = sorted(glob.glob(filespec))
     result = pd.DataFrame()
     for csvname in csvlist:
         progress(f"Reading {csvname}...")
-        data = pd.read_csv(csvname,
+        data = pd.read_csv(find_csvfile(csvname),
             usecols=columns.keys(),
             low_memory=True,
             converters=dtype)
@@ -112,8 +117,8 @@ def collate_noaa_lcd(filespec, timezone,
         progress(f"Indexing on {index}...")
         result.set_index(index,inplace=True)
     if saveas:
-        progress(f"Saving to {saveas}")
-        result.to_csv(saveas)
+        progress(f"Saving to {csvsave}")
+        result.to_csv(csvsave)
     progress("Processing complete")
     if returnas:
         return returnas(result)
@@ -131,7 +136,7 @@ def extract_daily_minmax(filespec,
         progress = nop):
     result = pd.DataFrame()
     progress(f"Reading {filespec}...")
-    data = pd.read_csv(filespec,converters={localtime:to_day}).rename(mapper={localtime:"day"},axis="columns")
+    data = pd.read_csv(find_csvfile(filespec),converters={localtime:to_day}).rename(mapper={localtime:"day"},axis="columns")
     result = pd.DataFrame()
     days = data.groupby(["day"])[column]
     result["min"] = days.min()
@@ -146,8 +151,10 @@ def extract_daily_minmax(filespec,
     else:
         return values
 
-locations = pd.read_csv("locations.csv",converters={
+locations = pd.read_csv(find_csvfile("locations.csv"),converters={
+        "location":str,
         "zipcode":str,
+        "source":str,
         "latitude":to_float,
         "longitude":to_float,
         "elevation":to_float,
@@ -165,7 +172,7 @@ if __name__ == '__main__':
         print(msg)
         sys.stdout.flush()
 
-    data = collate_noaa_lcd("noaa/PDX-*.csv","US/Pacific",
+    data = collate_data("noaa/PDX-*.csv","US/Pacific",
         saveas="noaa/PDX.csv",
         progress=show_progress,
         refresh='never')
