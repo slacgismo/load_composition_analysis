@@ -1,4 +1,4 @@
-"""Load model analysis
+"""Weather sensitivity analysis
 """
 import pandas as pd
 import datetime as dt
@@ -501,166 +501,6 @@ def get_model(data, datetime_col, power_col, temperature_col,
 
     return model
 
-#
-# LOAD_ELECTRIFICATION
-#
-electrification_index = ["location"]
-electrification_data = ["heat_pump","other_electric_heat","cooling","water_heating","cooking"]
-electrification_attributes = ["city","region","building_type"]
-def load_electrification (
-        select={},
-        index="location",
-        columns=["city","region","building_type","heat_pump",
-            "other_electric_heat","cooling","water_heating","cooking"],
-        convert=pd.DataFrame,
-        version='latest'
-        ):
-    """Get load electrification data
-
-    Load electrification provides information about what fraction of specified
-    enduses are electric.
-
-    Parameters:
-        select (dict): specifies the row constraints (default is {})
-        index (str or list): specifies rows to use as indexes (default is 'location')
-        columns (str or list): specifies the columns to return (default is all columns)
-        convert (callable or class): specifies the data type to return (default is DataFrame)
-        version (int or str): specifies the version of the data to use (default is 'latest')
-
-    Returns: (DataFrame or convert)
-    """
-    data = pd.read_csv(f"load_electrification-{version}.csv")
-    for key,value in select.items():
-        data = data[data[key]==value]
-    return convert(data.set_index(index)[columns])
-
-#
-# END-USE COMPONENTS
-#
-enduse_indexes = ["building_type","component"]
-residential_enduses = ["heating","cooling","computer","dryer",
-                       "entertainment","freezer","hotwater","lights","other",
-                       "oven","plugs","refrigeration","washer"]
-commercial_enduses = ["heating","cooling","ventilation","hotwater","cooking",
-                      "refrigeration","exterior_lights","interior_lights",
-                      "office_equipment","miscellaneous","process","motors","air_compressors"]
-all_enduses = list(set(residential_enduses).union(commercial_enduses)) 
-load_components = ["motor_a","motor_b","motor_c","motor_d","power_electronics","constant_current","constant_impedance"]               
-def enduse_components (
-        select={},
-        index=enduse_indexes,
-        columns=all_enduses,
-        convert=pd.DataFrame,
-        version='latest'
-        ):
-    """Get enduse components data
-
-    Enduse components provides information about how to map enduses to
-    load components using "rules of association".
-
-    Parameters:
-        select (dict): specifies the row constraints (default is {})
-        index (str or list): specifies rows to use as indexes (default is 'location')
-        columns (str or list): specifies the columns to return (default is all columns)
-        convert (callable or class): specifies the data type to return (default is DataFrame)
-        version (int or str): specifies the version of the data to use (default is 'latest')
-
-    Returns: (DataFrame or convert)
-    """
-    data = pd.read_csv(f"enduse_components-{version}.csv")
-    for key,value in select.items():
-        data = data[data[key]==value]
-    if index:
-        return convert(data.set_index(index)[columns])
-    else:
-        return convert(data[columns])
-
-#
-# FEEDER_COMPOSITION
-#
-feeder_component_indexes=["region","feeder_type","building_type"]
-feeder_component_data = ["floorarea_per_building","number_of_buildings","floorarea","composition"]
-def feeder_composition(
-        select={},
-        index=feeder_component_indexes,
-        columns=feeder_component_data,
-        convert=pd.DataFrame,
-        version='latest'
-        ):
-    """Get feeder composition data
-
-    Feeder composition provides information about different economic activites
-    taking place of different types of feeder.
-
-    Parameters:
-        select (dict): specifies the row constraints (default is {})
-        index (str or list): specifies rows to use as indexes (default is 'location')
-        columns (str or list): specifies the columns to return (default is all columns)
-        convert (callable or class): specifies the data type to return (default is DataFrame)
-        version (int or str): specifies the version of the data to use (default is 'latest')
-
-    Returns: (DataFrame or convert)
-    """
-    data = pd.read_csv(f"feeder_composition-{version}.csv")
-    for key,value in select.items():
-        data = data[data[key]==value]
-    data["floorarea"] = data["floorarea_per_building"] * data["number_of_buildings"]
-    data["composition"] = data["floorarea"] / sum(data["floorarea"])
-    if index:
-        return convert(data.set_index(index)[columns])
-    else:
-        return convert(data[columns])
-
-#
-# NOAA_WEATHER
-#
-def to_datetime(t):
-    return dt.datetime.strptime(t,'%Y-%m-%dT%H:%M:%S')
-
-def to_float(x):
-    try:
-        return float(x.rstrip('s'))
-    except:
-        return float("nan")
-
-def add_heatindex(data):
-    T = data["temperature"]
-    RH = data["humidity"]
-    try:
-        if T < 80.0 :
-            HI = 0.75*T + 0.25*( 61.0+1.2*(T-68.0)+0.094*RH)
-        else :
-            HI = -42.379 + 2.04901523*T + 10.14333127*RH - 0.22475541*T*RH - 0.00683783*T*T - 0.05481717*RH*RH + 0.00122874*T*T*RH + 0.00085282*T*RH*RH - 0.00000199*T*T*RH*RH
-            if RH < 13.0 and T < 112.0 :
-                HI -= ((13.0-RH)/4.0)*sqrt((17.0-(T-95.0).abs())/17.0)
-            elif RH > 85.0 and T < 87.0 :
-                HI += ((RH-85.0)/10.0) * ((87.0-T)/5.0);
-    except:
-        HI = float("nan")
-    return round(HI,1)
-
-def collate_noaa_lcd(location,
-        columns = {
-            'DATE':'datetime',
-            'HourlyDryBulbTemperature':'temperature',
-            'HourlyRelativeHumidity':'humidity',
-            },
-        dtype = {
-            'DATE':to_datetime,
-            'HourlyDryBulbTemperature':to_float,
-            'HourlyRelativeHumidity':to_float,
-        },
-        convert = pd.DataFrame,
-        index = "datetime"):
-    csvname = f"noaa/{location}-199.csv" 
-    data = pd.read_csv(csvname,usecols=columns.keys(),low_memory=True,converters=dtype)
-    data = data.filter(list(columns.keys())).rename(mapper=columns,axis='columns')
-    del data["REPORT_TYPE"]
-    data.dropna(inplace=True)
-    data["heatindex"] = data.apply(lambda row: add_heatindex(row),axis=1)
-    data.set_index(index,inplace=True)
-    return convert(data)
-
 def selftest():
     """
     Run selftest on the module
@@ -694,7 +534,8 @@ def selftest():
     22   2,129.6 3,086.1 3,269.4 22.2  52.9   62.9   86.8  0.5    -31.2  47.6  
     23   1,934.0 2,853.5 3,009.2 22.2  52.0   62.0   85.3  1.3    -30.9  46.1  
     """
-    model = get_model(ifile='testdata.csv',datetime_col=0,power_col=1,temperature_col=2)
+    data = load_data(ifile='testdata.csv')
+    model = get_model(data,datetime_col=0,power_col=1,temperature_col=2)
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
     pd.set_option('display.width', None)
