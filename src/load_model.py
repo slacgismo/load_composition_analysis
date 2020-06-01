@@ -611,6 +611,56 @@ def feeder_composition(
     else:
         return convert(data[columns])
 
+#
+# NOAA_WEATHER
+#
+def to_datetime(t):
+    return dt.datetime.strptime(t,'%Y-%m-%dT%H:%M:%S')
+
+def to_float(x):
+    try:
+        return float(x.rstrip('s'))
+    except:
+        return float("nan")
+
+def add_heatindex(data):
+    T = data["temperature"]
+    RH = data["humidity"]
+    try:
+        if T < 80.0 :
+            HI = 0.75*T + 0.25*( 61.0+1.2*(T-68.0)+0.094*RH)
+        else :
+            HI = -42.379 + 2.04901523*T + 10.14333127*RH - 0.22475541*T*RH - 0.00683783*T*T - 0.05481717*RH*RH + 0.00122874*T*T*RH + 0.00085282*T*RH*RH - 0.00000199*T*T*RH*RH
+            if RH < 13.0 and T < 112.0 :
+                HI -= ((13.0-RH)/4.0)*sqrt((17.0-(T-95.0).abs())/17.0)
+            elif RH > 85.0 and T < 87.0 :
+                HI += ((RH-85.0)/10.0) * ((87.0-T)/5.0);
+    except:
+        HI = float("nan")
+    return round(HI,1)
+
+def collate_noaa_lcd(location,
+        columns = {
+            'DATE':'datetime',
+            'HourlyDryBulbTemperature':'temperature',
+            'HourlyRelativeHumidity':'humidity',
+            },
+        dtype = {
+            'DATE':to_datetime,
+            'HourlyDryBulbTemperature':to_float,
+            'HourlyRelativeHumidity':to_float,
+        },
+        convert = pd.DataFrame,
+        index = "datetime"):
+    csvname = f"noaa/{location}-199.csv" 
+    data = pd.read_csv(csvname,usecols=columns.keys(),low_memory=True,converters=dtype)
+    data = data.filter(list(columns.keys())).rename(mapper=columns,axis='columns')
+    del data["REPORT_TYPE"]
+    data.dropna(inplace=True)
+    data["heatindex"] = data.apply(lambda row: add_heatindex(row),axis=1)
+    data.set_index(index,inplace=True)
+    return convert(data)
+
 def selftest():
     """
     Run selftest on the module
