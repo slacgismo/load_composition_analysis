@@ -30,7 +30,7 @@ def get_load_profile(date):
 		H = int(t/60) % 24
 		M = t % 60
 		return datetime(y,m,d,H,M,0)
-	df.index = list(map(lambda t: get_time(datename,t),df.index))
+	df.index = list(map(lambda t: datetime.strptime(datename+" "+t,"%Y%m%d %H:%S"),df.index))
 
 	return df
 
