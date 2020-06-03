@@ -66,7 +66,9 @@ def utchour(data,column,modulo):
 def nop(msg):
     return
 
-def collate_data(filespec, timezone,
+def collate_data(location,
+        filespec = 'auto',
+        timezone = 'auto',
         columns = {
             'DATE': 'localtime',
             'HourlyDryBulbTemperature': 'temperature',
@@ -84,7 +86,7 @@ def collate_data(filespec, timezone,
         returnas = pd.DataFrame,
         index = "localtime",
         progress=nop,
-        saveas = None,
+        saveas = 'auto',
         refresh = 'never'):
     """Collate NOAA LCD weather downloads
 
@@ -100,6 +102,12 @@ def collate_data(filespec, timezone,
     Returns:
         varies - data processed by `convert` parameter
     """
+    if filespec == 'auto':
+        filespec = f"noaa/{location}-*.csv"
+    if timezone == 'auto':
+        timezone = get_location(location,"timezone")
+    if saveas == 'auto':
+        saveas = f"noaa/{location}.csv"
     set_tzinfo(timezone)
     if saveas:
         csvsave = find_csvfile(saveas)
@@ -143,7 +151,8 @@ def collate_data(filespec, timezone,
 def to_day(t):
     return int(dt.datetime.fromisoformat(t).timestamp()/86400)
 
-def extract_daily_minmax(filespec,
+def extract_daily_minmax(location,
+        filespec = 'auto',
         percentiles = [0.1,0.9],
         column = "heatindex",
         localtime = "localtime",
@@ -158,6 +167,8 @@ def extract_daily_minmax(filespec,
     Returns:
         dict = {"min": min-value, "max": max-value}
     """
+    if filespec == 'auto':
+        filespec = f"noaa/{location}.csv"
     result = pd.DataFrame()
     data = pd.read_csv(find_csvfile(filespec),converters={localtime:to_day}).rename(mapper={localtime:"day"},axis="columns")
     result = pd.DataFrame()
@@ -180,7 +191,8 @@ locations = pd.read_csv(find_csvfile("locations.csv"),converters={
         "latitude":to_float,
         "longitude":to_float,
         "elevation":to_float,
-        "timezone":int,
+        "timezone":str,
+        "tzoffset":int,
         "dst":int,
     }).set_index("location")
 
@@ -206,10 +218,5 @@ if __name__ == '__main__':
         print(msg)
         sys.stdout.flush()
 
-    data = collate_data("noaa/PDX-*.csv","US/Pacific",
-        saveas="noaa/PDX.csv",
-        progress=show_progress,
-        refresh='never')
-
-    minmax = extract_daily_minmax("noaa/PDX.csv")
-    print(f"PDX: {minmax}")
+    collate_data("PDX",progress=show_progress)
+    print(extract_daily_minmax("PDX"))
