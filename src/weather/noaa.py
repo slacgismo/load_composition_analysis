@@ -86,13 +86,27 @@ def collate_data(filespec, timezone,
         progress=nop,
         saveas = None,
         refresh = 'never'):
+    """Collate NOAA LCD weather downloads
+
+    Parameters:
+        columns (dict) - specify NOAA LCD columns to map into collated data
+        dtype (dict) - specify the data types for columns to collate
+        process (dict) - specify post-processing functions and parameters
+        drop_duplicates (str) - specify column index to drop duplicates on
+        returnas (callable or class) - specify return data type
+        progress (callable) - specify progress callback function
+        saveas (str) - specify CSV file to save data (default is None)
+        refresh (str) - specify when to refresh (default is 'never')
+    Returns:
+        varies - data processed by `convert` parameter
+    """
     set_tzinfo(timezone)
     if saveas:
         csvsave = find_csvfile(saveas)
         if os.path.exists(csvsave) and refresh == 'never':
             return pd.read_csv(csvsave)
     csvlist = sorted(glob.glob(filespec))
-    result = pd.DataFrame()
+    result = []
     for csvname in csvlist:
         progress(f"Reading {csvname}...")
         data = pd.read_csv(find_csvfile(csvname),
@@ -103,7 +117,8 @@ def collate_data(filespec, timezone,
             mapper=columns,
             axis='columns')
         data.dropna(inplace=True)
-        result = result.append(data)
+        result.append(data)
+    result = pd.concat(result)
     for key,value in process.items():
         progress(f"Computing {key}...")
         if callable(value[2]):
@@ -129,13 +144,21 @@ def to_day(t):
     return int(dt.datetime.fromisoformat(t).timestamp()/86400)
 
 def extract_daily_minmax(filespec,
-        location = None,
         percentiles = [0.1,0.9],
         column = "heatindex",
         localtime = "localtime",
-        progress = nop):
+        ):
+    """Extract daily min/max temperature values
+
+    Parameters:
+        filespec (str) - file containing weather data
+        percentiles (list) - min and max percentiles
+        localtime (str) - column name specifying localtime
+
+    Returns:
+        dict = {"min": min-value, "max": max-value}
+    """
     result = pd.DataFrame()
-    progress(f"Reading {filespec}...")
     data = pd.read_csv(find_csvfile(filespec),converters={localtime:to_day}).rename(mapper={localtime:"day"},axis="columns")
     result = pd.DataFrame()
     days = data.groupby(["day"])[column]
@@ -146,21 +169,32 @@ def extract_daily_minmax(filespec,
     min = result[result["minrank"]>percentiles[0]]["min"].min()
     max = result[result["maxrank"]>percentiles[1]]["max"].max()
     values = {"min":min,"max":max}
-    if location:
-        return {location: values}
-    else:
-        return values
+    return values
 
 locations = pd.read_csv(find_csvfile("locations.csv"),converters={
         "location":str,
-        "zipcode":str,
+        "airport":str,
         "source":str,
+        "city":str,
+        "zipcode":str,
         "latitude":to_float,
         "longitude":to_float,
         "elevation":to_float,
+        "timezone":int,
+        "dst":int,
     }).set_index("location")
 
 def get_location(location,info=None):
+    """Get location information
+
+    Parameters:
+        location (str) - location code (e.g., "PDX")
+        info (str) - column name (e.g., "city")
+
+    Returns:
+        dict - if 'info' is 'None'
+        value - if 'info' is a valid column name
+    """
     global locations
     if info:
         return locations.loc[location][info]
