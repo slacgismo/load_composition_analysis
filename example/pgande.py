@@ -43,24 +43,15 @@ def get_loads(start,stop,date_format='%m/%d/%y',show_progress=False):
 		start = datetime.strptime(start,date_format)
 	if type(stop) is str:
 		stop = datetime.strptime(stop,date_format)
-	result = pd.DataFrame()
+	blocks = []
 	for date in daterange(start,stop):
 		if show_progress:
 			print(f"Processing {date}...",flush=True)
 		try:
-			df = None
-			df = get_load_profile(date)
+			blocks.append(get_load_profile(date))
 		except Exception as err:
 			print(f"ERROR: get_load_profile(date={date}): {err}")
-			df = DataFrame()
-		try:
-			result = result.append(df,sort=True)
-		except Exception as err:
-			savefile = date.strftime('%Y%m%d-err.csv')
-			print(f"ERROR: get_load_profile(date={date}): {err}, saving bad data to {savefile}")
-			df.to_csv(savefile)
-			pass
-	return result
+	return pd.concat(blocks)
 
 if __name__ == '__main__':
 	data = get_loads('3/1/20','3/14/20',show_progress=True)
