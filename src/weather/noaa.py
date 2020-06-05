@@ -182,11 +182,18 @@ def extract_daily_minmax(location,
     values = {"min":min,"max":max}
     return values
 
+def to_dict(d):
+    try:
+        return eval(d)
+    except:
+        return {}
+
 locations = pd.read_csv(find_csvfile("locations.csv"),converters={
         "location":str,
         "airport":str,
         "source":str,
         "city":str,
+        "station":to_dict,
         "zipcode":str,
         "latitude":to_float,
         "longitude":to_float,
