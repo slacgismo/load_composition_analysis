@@ -220,10 +220,28 @@ def get_location(location,info=None):
     else:
         return {location: dict(locations.loc[location])}
 
-if __name__ == '__main__':
-    def show_progress(msg):
-        print(msg)
-        sys.stdout.flush()
+station_list = locations[locations["source"]=="NOAA"]["station"].to_dict()
+timezones = locations[locations["source"]=="NOAA"]["timezone"].to_dict()
 
-    collate_data("PDX",progress=show_progress)
-    print(extract_daily_minmax("PDX"))
+def get_minmax_data(warn=False):
+    minmax_csv = find_csvfile("noaa/minmax.csv")
+    if not os.path.exists(minmax_csv):
+        df = [] 
+        for location in station_list.keys():
+            try:
+                row = extract_daily_minmax(location)
+                row["location"] = location
+                row["min"] = [row["min"]]
+                row["max"] = [row["max"]]
+                df.append(pd.DataFrame(data=row))
+            except:
+                if warn:
+                    print(f"{location} data not found")
+        data = pd.concat(df).set_index("location")
+        data.to_csv(minmax_csv)
+    else:
+        data = pd.read_csv(minmax_csv).set_index("location")
+    return data
+
+if __name__ == '__main__':
+    print(get_minmax_data())
