@@ -10,7 +10,7 @@ import config_default
 try:
     import config_user
 except:
-    raise Exception("you have not created 'config.py'")
+    raise Exception("you have not created 'config_user.py'")
 
 '''
 This file contains a few functions that allow one to automate webscraping LCD data from the NOAA website. The first function makes
@@ -44,9 +44,9 @@ wban = pd.read_csv("WBAN dir.csv")
 wban_list = np.array(wban["WBAN"])
 location_abbrev = np.array(locations["location"])
 
-result = file_requester(wban_list, config.email)
+result = file_requester(wban_list, config_user.email)
 #Wait until all the requests are submitted and processed and the data is available
-file_downloader(result, config.email)
+file_downloader(result, config_user.email)
 #Wait until all downloads are complete
 file_renamer(result, wban_list, location_abbrev, "199")
 '''
@@ -62,10 +62,10 @@ def file_requester(zipcodes_array, email_id):
     string=[] #Debugging tool - Returns the order summary table for each order as a string
     for i in zipcode_list:
         for retry in range(3):
-            driver = webdriver.Chrome(config.chrome)
+            driver = webdriver.Chrome(config_user.chrome)
             #You will need to change the above line to the webdrive you use and where you have it installed
             try:
-                driver.get("https://www.ncdc.noaa.gov/cdo-web/datasets/LCD/stations/" + str(i) + "/detail")
+                driver.get(config_default.noaa_site_station_pre + str(i) + config_default.noaa_site_station_suf)
                 #Looks for the wepbage for the given wban code
                 time.sleep(1)
                 try:
@@ -131,10 +131,10 @@ def file_downloader(orders, email_id):
     '''
     for i in orders:
         order_id = i[1] #Extracts the order_id
-        driver = webdriver.Chrome(config.chrome)
-        driver.get("https://www.ncdc.noaa.gov/cdo-web/orders?email=" + email + "&id=" + order_id) #Retrieves order status page
-        driver.get("https://www.ncei.noaa.gov/orders/cdo/" + order_id + ".csv")# Downloads csv file
-        #time.sleep(45) #Sleep time to allow file to download in case webdriver force closes window. Uncomment if required.
+        driver = webdriver.Chrome(config_user.chrome)
+        driver.get(config_default.noaa_email + email + config_default.noaa_id + order_id) #Retrieves order status page
+        driver.get(config_default.noaa_order + order_id + ".csv")# Downloads csv file
+        #time.sleep(45) #Sleep time to allow file to download in case webdrconfig_default.idiver force closes window. Uncomment if required.
 
 def file_renamer(orders, wban_list, location_abbrev, file_suffix)
 '''
@@ -144,6 +144,6 @@ should already be the same. The file suffix corresponds to the date range (199,2
 '''
     for i in orders:
         order_id = i[1]
-        os.rename(config.localdata + "\\" + order_id +".csv",config.localdata+"\\"+location_abbrev[list(wban_list).index(i[0])] + "-" + file_suffix +".csv")
+        os.rename(config_user.localdata + "\\" + order_id +".csv",config_user.localdata+"\\"+location_abbrev[list(wban_list).index(i[0])] + "-" + file_suffix +".csv")
         #Change the above line to the location of your file downloads and where you want to store the renamed files.
         print(i[0] + " processed")
