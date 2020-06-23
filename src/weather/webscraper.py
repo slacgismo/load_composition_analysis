@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import os
 import config_default
+from pathlib import Path
 try:
     import config_user
 except:
@@ -144,6 +145,6 @@ should already be the same. The file suffix corresponds to the date range (199,2
 '''
     for i in orders:
         order_id = i[1]
-        os.rename(config_user.localdata + "\\" + order_id +".csv",config_user.localdata+"\\"+location_abbrev[list(wban_list).index(i[0])] + "-" + file_suffix +".csv")
+        os.rename(Path(config_user.localdata + "\\" + order_id +".csv"),Path(config_user.localdata+"\\"+location_abbrev[list(wban_list).index(i[0])] + "-" + file_suffix +".csv"))
         #Change the above line to the location of your file downloads and where you want to store the renamed files.
         print(i[0] + " processed")
