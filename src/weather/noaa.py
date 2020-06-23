@@ -7,12 +7,17 @@ import pandas as pd
 import datetime as dt
 import numpy as np
 import pytz
+from pathlib import Path
+
+print(sys.version)
 
 UTC = pytz.timezone("UTC")
 my_tzinfo = UTC
 
 def find_csvfile(name):
-    return str(sys.modules[__name__].__file__).replace(f"/noaa.py",f"/{name}")
+    newname = str(sys.modules[__name__].__file__).replace(str(Path(f"/noaa.py")),str(Path(f"/{name}")))
+    print(f"find_csvfile(name='{name}') -> {newname}")
+    return newname
 
 def set_tzinfo(timezone):
     global my_tzinfo
