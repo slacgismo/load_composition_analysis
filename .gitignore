@@ -130,3 +130,5 @@ data/pge_loads.csv
 .DS_Store
 *.docx
 data/dlp*
+src/profiles.gif
+src/balance.png
