@@ -68,7 +68,7 @@ Processing:
     NullValue = float('nan')
     SkipRows = 1
     MaxIterations = 50
-    Model = 0
+    Model = 1
 
 def read_datetime(x,format=config.DatetimeFormat):
     """
