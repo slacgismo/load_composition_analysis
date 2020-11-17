@@ -4,7 +4,7 @@ import os
 import datetime
 from calendar import monthrange
 import matplotlib.pyplot as plt
-
+import setup_config
 class config:
     eu_dict_ceus = dict(zip(
 ["heat_pump", "other_electric_heat", "cooling", "water_heating", "cooking"],
@@ -61,7 +61,34 @@ class config:
     weather_enduses_rbsa = {'sensitive' : ['cooling', 'heating', 'other'], 'insensitive': ['computer', 'dryer', 'entertainment', 'freezer', 'lighting', 'oven', 'plug', 'refrig', 'washer', 'waterheat']}
     btype_dict = {'office': ['LOFF'], 'lodging': ['LODG'], 'commercial': ['AWHS', 'COLL', 'GROC', 'HLTH', 'MISC', 'REFW', 'REST', 'RETL', 'SCHL', 'WRHS', 'AOFF', 'SOFF'], 'residential' : ['RES']}
     region_df = pd.DataFrame({'state': ["ID", 'MT', 'OR', 'WA'], 'region': ["Mountain", "Mountain", "Pacific", 'Pacific'] })
-    rbsa_locations = pd.merge(pd.read_csv('rbsa_locations.csv'), region_df, 'left', 'state')
+    rbsa_locations = pd.merge(pd.read_csv(setup_config.rbsa_locations), region_df, 'left', 'state')
+
+def find_csvfile(name):
+    return str(sys.modules[__name__].__file__).replace(f"/loads.py",f"/{name}.csv")
+
+
+electrification_index = ["location"]
+electrification_data = ["heat_pump","other_electric_heat","cooling","water_heating","cooking"]
+electrification_attributes = ["city","region","building_type"]
+def load_electrification (
+        select={},
+        index="location",
+        columns=["city","region","building_type","heat_pump",
+            "other_electric_heat","cooling","water_heating","cooking"],
+        convert=pd.DataFrame,
+        version='latest'
+        ):
+
+    data = pd.read_csv(setup_config.electrification_data)
+    for key,value in select.items():
+        data = data[data[key]==value]
+    return convert(data.set_index(index)[columns])
+
+locations = pd.read_csv(setup_config.rbsa_locations)
+locations['postcode'] = np.array(locations['postcode'])//100
+siteid_zip = {}
+for i in range(locations.shape[0]):
+    siteid_zip[str(locations.iloc[i][0])] = locations.iloc[i][3]
 
 def get_datetime(ts):
     return datetime.datetime.strptime(ts,"%d%b%y:%H:%M:%S")
@@ -73,22 +100,32 @@ def noaa_datetime(ts):
 def get_datetime_ceus(ts):
     return datetime.datetime.strptime(ts,"%Y-%m-%d %H:%M:%S")
 
-def read_files():
-    siteid_df_dict = {}
-    for csv in os.listdir("C:/Users/Palash Goiporia/GISMO_files/rbsa_data/data/rbsa_sites/") :
-        if csv.endswith(".csv"):
-            siteid_df_dict[csv.split('.')[0]] = pd.read_csv("C:/Users/Palash Goiporia/GISMO_files/rbsa_data/data/rbsa_sites/" + csv, converters={"time":get_datetime})
-    return siteid_df_dict
+#def read_files():
+#    siteid_df_dict = {}
+#    for csv in os.listdir("C:/Users/Palash Goiporia/GISMO_files/rbsa_data/data/rbsa_sites/") :
+#        if csv.endswith(".csv"):
+#            siteid_df_dict[csv.split('.')[0]] = pd.read_csv("C:/Users/Palash Goiporia/GISMO_files/rbsa_data/data/rbsa_sites/" + csv, converters={"time":get_datetime})
+#    return siteid_df_dict
+
+class int2:
+    def __init__(self, x):
+        try:
+            x = float(x)
+        except:
+            try:
+                x= float(x[:-1])
+            except:
+                x = 0
+        self.x = x
 
 def get_weather(siteid, years = [2012, 2013]):
-
-    locations = pd.read_csv("C:/Users/Palash Goiporia/GISMO_files/rbsa_data/rbsa_locations.csv")
+    locations = pd.read_csv(setup_config.rbsa_locations)
     locations['postcode'] = np.array(locations['postcode'])//100
     siteid_zip = {}
     for i in range(locations.shape[0]):
         siteid_zip[str(locations.iloc[i][0])] = locations.iloc[i][3]
 
-    temp = pd.read_csv('C:/Users/Palash Goiporia/GISMO_files/rbsa_data/weather/%s.csv' %(siteid_zip[siteid]), low_memory = False, converters = {'DATE': get_datetime_rbsa}).fillna(0)
+    temp = pd.read_csv(setup_config.rbsa_weather %(siteid_zip[siteid]), low_memory = False, converters = {'DATE': get_datetime_rbsa}).fillna(-100)
     temp['index'] = temp['DATE']
     temp = temp.set_index('index')
     temp = temp[(temp["REPORT_TYPE"] != "SOD  ") & (temp["REPORT_TYPE"] != "SOM  ")]
@@ -97,26 +134,28 @@ def get_weather(siteid, years = [2012, 2013]):
 
     temp = temp[temp.index.year.isin(years)]
     temp['date_hour'] = [datetime.datetime(t.year, t.month, t.day, t.hour, 0, 0) for t in temp['DATE']]
+    start = datetime.datetime.now()
+    temp['HourlyDryBulbTemperature'] = np.array([int2(t).x for t in temp['HourlyDryBulbTemperature']])
+
+    temp = temp.groupby("date_hour").mean()
 
     cleaned_temp = np.array([])
     for i in np.array(temp["HourlyDryBulbTemperature"]):
         try:
-            if i != -100:
-                cleaned_temp = np.append(cleaned_temp, int(i))
-            else:
+            if i < -100:
                 cleaned_temp = np.append(cleaned_temp, cleaned_temp[-1:])
+            else:
+                cleaned_temp = np.append(cleaned_temp, i)
 
         except ValueError:
             cleaned_temp = np.append(cleaned_temp, cleaned_temp[-1:])
     temp["HourlyDryBulbTemperature"] = cleaned_temp
-    temp = temp.groupby("date_hour").mean()
     temp["index"] = temp.index.values
     temp = temp.rename(columns = {"HourlyDryBulbTemperature": "temp"})
-
     return temp
 
 def area(siteid):
-    sqft = pd.read_csv('C:/Users/Palash Goiporia/GISMO_files/rbsa_data/SFMaster_housegeometry.csv')
+    sqft = pd.read_csv(setup_config.rbsa_sqft)
     sqft = sqft[["siteid", "SummarySketchSqFt_Calculated"]]
     sqft = sqft[sqft["siteid"] == siteid].iloc[0][1]
     return sqft
@@ -162,7 +201,7 @@ def rbsa_file_reader(weekday, electrification):
         for j in ["commercial", "residential"]:
             x[j] = electrification[(electrification["region"] == i) & (electrification["building_type"] == j)].iloc[0][3:]
         regional_electrification[i] = x
-    rbsa_dict = pd.read_csv("rbsa_data/rbsa-dict.csv").fillna('ignore')
+    rbsa_dict = pd.read_csv(setup_config.rbsa_dict).fillna('ignore')
 
     enduses = []
     for i in range(rbsa_dict.shape[0]):
@@ -202,7 +241,7 @@ def rbsa_file_reader(weekday, electrification):
     rbsa_dict = rbsa_dict[rbsa_dict['Alt_enduses'] != 'ignore']
 
 
-    for file in ["rbsa_data/data/rbsa1-1.csv", "rbsa_data/data/rbsa1-2.csv", "rbsa_data/data/rbsa1-3.csv", "rbsa_data/data/rbsa1-4.csv"]:
+    for file in setup_config.rbsa_datasets:
         reader = pd.read_csv(file, low_memory = False, converters={"time":get_datetime})
         time = [datetime.datetime(t.year, t.month, t.day, t.hour, 0, 0) for t in reader["time"]]
         reader["time"] = time
@@ -325,7 +364,7 @@ def rbsa_file_reader(weekday, electrification):
     return [load_test, load_dict, area_dict, total_area]
 
 def composite_enduse(filename, electrification, building = 'commercial'):
-    components_df = pd.read_csv('C:/Users/Palash Goiporia/GISMO_files/load_composition_analysis/src/enduse/components-latest.csv')
+    components_df = pd.read_csv(setup_config.roa_matrix)
     if building == 'commercial':
         components_df = components_df.iloc[:7].dropna(axis = 1)
         zone, build = filename.split('_')
@@ -342,7 +381,7 @@ def composite_enduse(filename, electrification, building = 'commercial'):
 
     area_dict = {}
 
-    ceus_df = pd.read_excel('C:/Users/Palash Goiporia/GISMO_files/ceus_data/xls/%s.xls' %(filename), sheet_name = 'expEndUse8760')
+    ceus_df = pd.read_excel(setup_config.ceus_datasets %(filename), sheet_name = 'expEndUse8760')
 
     hourly_load = {}
     for fuel in ['Elec']:
@@ -376,9 +415,9 @@ def composite_enduse(filename, electrification, building = 'commercial'):
         df[config.eu_dict[col]] = x/regional_electrification['Pacific'][building][list(electrification.columns[4:]).index(col)]
 
     df.insert(0, 'Date', [datetime.datetime(2002, int(df["Mth"][t]), int(df["Dy"][t]), int(df["Hr"][t])) for t in range(df.shape[0])])
-    df = pd.merge(df, pd.read_csv('C:/Users/Palash Goiporia/GISMO_files/ceus_data/weather/%s.csv' %(zone), converters = {'hour': get_datetime_ceus}), left_on = 'Date', right_on = 'hour')
+    df = pd.merge(df, pd.read_csv(setup_config.ceus_weather %(zone), converters = {'hour': get_datetime_ceus}), left_on = 'Date', right_on = 'hour')
 
-    sqft_df = pd.read_excel('C:/Users/Palash Goiporia/GISMO_files/ceus_data/xls/%s.xls' %(filename), sheet_name = 'expSqFt')
+    sqft_df = pd.read_excel(setup_config.ceus_datasets %(filename), sheet_name = 'expSqFt')
     #sqft_df
     for col in df.columns[4:-2]:
         area_dict[col] = sqft_df[sqft_df["SegID"] == config.enduse_dict[col]].iloc[0][1]
@@ -402,3 +441,69 @@ def composite_enduse(filename, electrification, building = 'commercial'):
     common_enduse_df.insert(0, 'Date', df["Date"])
     common_enduse_df["temp"] = df["drybulb"]
     return [common_enduse_df, df, load_temp, area_dict]
+
+if __name__ == "__main__":
+    start = datetime.datetime.now()
+    electrification = load_electrification()
+    rbsa_data_weekday = rbsa_file_reader('weekday', electrification)
+    rbsa_enduses = None
+    for col in rbsa_data_weekday[1].keys():
+        try:
+            rbsa_enduses = pd.merge(rbsa_data_weekday[1][col].drop(columns = ['temp']), rbsa_enduses, left_index = True, right_index = True)
+        except:
+            rbsa_enduses = rbsa_data_weekday[1][col]
+    rbsa_enduses.to_csv('rbsa_enduses.csv')
+    print((datetime.datetime.now() - start).total_seconds())
+
+    old = 0
+    commercial_composite_enduses = {}
+    #building_type_dict = {}
+    for xls in sorted(os.listdir('C:/Users/Palash Goiporia/GISMO_files/ceus_data/xls/')):
+        if xls.endswith('.xls'):
+            filename = xls.split('.')[0]
+            zone, building_type = filename.split('_')[0], filename.split('_')[1]
+            df = composite_enduse(filename, electrification)
+            if zone != old:
+                building_type_dict = {}
+
+            building_type_dict[building_type] = df
+            try:
+                commercial_composite_enduses[zone].append(building_type_dict)
+            except:
+                commercial_composite_enduses[zone] = building_type_dict
+            old = zone
+            print(filename)
+    area_dict = {}
+    building_dict = {}
+    for zone in commercial_composite_enduses.keys():
+        for build in commercial_composite_enduses[zone].keys():
+            try:
+                building_dict[build] = building_dict[build].append(commercial_composite_enduses[zone][build][1])
+
+            except:
+                building_dict[build] = commercial_composite_enduses[zone][build][1]
+
+            try:
+                for col in commercial_composite_enduses[zone][build][3].keys():
+                    area_dict[build][col] += commercial_composite_enduses[zone][build][3][col]
+            except:
+                y = {}
+                for col in commercial_composite_enduses[zone][build][3].keys():
+                    y[col] = commercial_composite_enduses[zone][build][3][col]
+                area_dict[build] = y
+    normed_load = {}
+    for b in building_dict.keys():
+        temp = building_dict[b].fillna(0).groupby('hour').mean()['drybulb']
+        x = []
+        for t in building_dict[b]['hour']:
+            x.append(pd.Timestamp(t))
+        building_dict[b]['hour'] = x
+        v = building_dict[b].fillna(0).groupby('hour').sum()
+        for col in area_dict[b].keys():
+            v[col] = np.array(v[col])/area_dict[b][col]
+        v['drybulb'] = temp
+        normed_load[b] = v
+
+    for key in normed_load.keys():
+        normed_load[key].to_csv(f'{key}_enduse_data.csv')
+    print((datetime.datetime.now() - start).total_seconds())
