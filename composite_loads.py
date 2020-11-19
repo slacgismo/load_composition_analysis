@@ -6,7 +6,7 @@ from calendar import monthrange
 import matplotlib.pyplot as plt
 import sensitivity_new as sn
 import load_composition as lc
-import setup_config
+import git_setup_config as setup_config
 import user_config
 import pickle
 class config:
@@ -65,7 +65,7 @@ class config:
     weather_enduses_rbsa = {'sensitive' : ['cooling', 'heating', 'other'], 'insensitive': ['computer', 'dryer', 'entertainment', 'freezer', 'lighting', 'oven', 'plug', 'refrig', 'washer', 'waterheat']}
     btype_dict = {'office': ['LOFF'], 'lodging': ['LODG'], 'commercial': ['AWHS', 'COLL', 'GROC', 'HLTH', 'MISC', 'REFW', 'REST', 'RETL', 'SCHL', 'WRHS', 'AOFF', 'SOFF'], 'residential' : ['RES']}
     region_df = pd.DataFrame({'state': ["ID", 'MT', 'OR', 'WA'], 'region': ["Mountain", "Mountain", "Pacific", 'Pacific'] })
-    rbsa_locations = pd.merge(pd.read_csv(setup_config.rbsa_locations), region_df, 'left', 'state')
+    
 
 def get_datetime(ts):
     return datetime.datetime.strptime(ts,"%d%b%y:%H:%M:%S")
@@ -105,11 +105,7 @@ def load_electrification (
         data = data[data[key]==value]
     return convert(data.set_index(index)[columns])
 
-locations = pd.read_csv(setup_config.rbsa_locations)
-locations['postcode'] = np.array(locations['postcode'])//100
-siteid_zip = {}
-for i in range(locations.shape[0]):
-    siteid_zip[str(locations.iloc[i][0])] = locations.iloc[i][3]
+
 
 from datetime import timedelta, date
 
