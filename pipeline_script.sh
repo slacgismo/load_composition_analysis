@@ -1,2 +1,2 @@
-pip install user_requirements.txt
+pip install -r user_requirements.txt
 python composite_loads.py
