@@ -5,7 +5,6 @@ import datetime
 from calendar import monthrange
 import matplotlib.pyplot as plt
 import sensitivity_new as sn
-import load_composition as lc
 import git_setup_config as setup_config
 import user_config
 import pickle
@@ -65,7 +64,7 @@ class config:
     weather_enduses_rbsa = {'sensitive' : ['cooling', 'heating', 'other'], 'insensitive': ['computer', 'dryer', 'entertainment', 'freezer', 'lighting', 'oven', 'plug', 'refrig', 'washer', 'waterheat']}
     btype_dict = {'office': ['LOFF'], 'lodging': ['LODG'], 'commercial': ['AWHS', 'COLL', 'GROC', 'HLTH', 'MISC', 'REFW', 'REST', 'RETL', 'SCHL', 'WRHS', 'AOFF', 'SOFF'], 'residential' : ['RES']}
     region_df = pd.DataFrame({'state': ["ID", 'MT', 'OR', 'WA'], 'region': ["Mountain", "Mountain", "Pacific", 'Pacific'] })
-    
+
 
 def get_datetime(ts):
     return datetime.datetime.strptime(ts,"%d%b%y:%H:%M:%S")
