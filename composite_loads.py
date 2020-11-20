@@ -133,7 +133,11 @@ def weather_season(location, day):
         weekday = None
     summer_months = [6,7,8,9]
     winter_months = [11,12,1,2]
-    loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
+    try:
+        loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
+    except:
+        os.system('python aws_pull.py')
+        loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
     time = [datetime.datetime(t.year, t.month, t.day, t.hour, 0, 0) for t in loc["localtime"]]
     loc["localtime"] = time
     loc["hr"] = [t.hour for t in loc["localtime"]]
@@ -495,3 +499,6 @@ if __name__ == "__main__":
     electrification = load_electrification()
     weather = weather_season(user_config.city, 'weekday')
     comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = user_config.city, feeder = user_config.feeder_type, electrification = electrification, debug = False)
+    f = open("file_loc.txt", "w")
+    f.write(f'{user_config.city}/composite/{user_config.feeder_type}')
+    f.close()
