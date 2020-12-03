@@ -8,6 +8,7 @@ import sensitivity_new as sn
 import git_setup_config as setup_config
 import user_config
 import pickle
+import requests
 class config:
     eu_dict_ceus = dict(zip(
 ["heat_pump", "other_electric_heat", "cooling", "water_heating", "cooking"],
@@ -123,7 +124,7 @@ def get_keys(dictionary, val):
 def inverse_mapping(f):
     return f.__class__(map(reversed, f.items()))
 
-def weather_season(location, day):
+def weather_season(location, day, aws):
 
     if day == "weekday":
         weekday = 1
@@ -133,11 +134,19 @@ def weather_season(location, day):
         weekday = None
     summer_months = [6,7,8,9]
     winter_months = [11,12,1,2]
-    try:
-        loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
-    except:
-        os.system('python aws_pull.py')
-        loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
+    if aws == True:
+        #print('aws')
+        url = setup_config.aws_link %(location)
+        r = requests.get(url, allow_redirects=True)
+        open(f'{location}.csv', 'wb').write(r.content)
+        loc = pd.read_csv(f'{location}.csv', converters = {"localtime": noaa_datetime})
+
+    else:
+        try:
+            loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
+        except:
+            os.system('python aws_pull.py')
+            loc = pd.read_csv(setup_config.noaa_folder %(location), converters = {"localtime": noaa_datetime})
     time = [datetime.datetime(t.year, t.month, t.day, t.hour, 0, 0) for t in loc["localtime"]]
     loc["localtime"] = time
     loc["hr"] = [t.hour for t in loc["localtime"]]
@@ -497,7 +506,7 @@ if __name__ == "__main__":
     with open(f'rbsa_sens.pickle', 'rb') as file:
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
-    weather = weather_season(user_config.city, 'weekday')
+    weather = weather_season(location = user_config.city, day = 'weekday', aws = True)
     comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = user_config.city, feeder = user_config.feeder_type, electrification = electrification, debug = False)
     f = open("file_loc.txt", "w")
     f.write(f'{user_config.city}/composite/{user_config.feeder_type}')
