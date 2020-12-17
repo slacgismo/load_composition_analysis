@@ -1,3 +1,3 @@
-city = ['BOS']
+city = ['BOS', 'MIA']
 feeder_type = ['residential']
 season = ['summer', 'winter']
