@@ -1,3 +1,3 @@
-city = 'BOS'
-season = 'Summer'
-feeder_type = 'residential'
+city = ['BOS']
+feeder_type = ['residential']
+season = ['summer', 'winter']

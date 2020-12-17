@@ -469,6 +469,10 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 
     season_dict = {'winter': winter_build_load, 'spring': spring_build_load, 'summer': summer_build_load}
     for season in ['winter', 'spring', 'summer']:
+        if not os.path.isdir('%s/%s' %(location, season)):
+            os.mkdir('%s/%s' %(location, season))
+        if not os.path.isdir('%s/%s/%s' %(location, season, feeder)):
+            os.mkdir('%s/%s/%s' %(location, season, feeder))
         arr = season_dict[season]/sum(season_dict[season])
         #for i in range(len(arr)):
          #   for j in range(len(arr[i])):
@@ -478,7 +482,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         df = pd.DataFrame(arr)
         print(df)
         df.insert(0, 'Component', np.array(res_comp['component']))
-        df.to_csv('%s/%s/%s/%s.csv' %(location, 'composite', feeder, season))
+        df.to_csv('%s/%s/%s/%s_%s_%s.csv' %(location, season, feeder, location, season, feeder))
         #plt.figure(figsize = (18,6))
         fig, ax = plt.subplots(1,2, figsize = (18,6))
         #plt.show()
@@ -494,20 +498,23 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         ax[1].set_xlabel('Hour of the day')
         ax[1].set_ylabel('Load (kW per sqft)')
         ax[1].set_xticks(np.arange(0,24,6))
-        plt.savefig('%s/%s/%s/%s.png' %(location, 'composite', feeder, season))
+        plt.savefig('%s/%s/%s/%s_%s_%s.png' %(location, season, feeder, location, season, feeder))
         plt.close()
 
 
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
+    open("file_loc.txt", "w").close()
     with open(f'ceus_sens.pickle', 'rb') as file:
         ceus_sens = pickle.load(file)
     with open(f'rbsa_sens.pickle', 'rb') as file:
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
-    weather = weather_season(location = user_config.city, day = 'weekday', aws = True)
-    comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = user_config.city, feeder = user_config.feeder_type, electrification = electrification, debug = False)
-    f = open("file_loc.txt", "w")
-    f.write(f'{user_config.city}/composite/{user_config.feeder_type}')
-    f.close()
+    for city in user_config.city:
+        weather = weather_season(location = city, day = 'weekday', aws = True)
+        for feeder in user_config.feeder_type:
+            comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, debug = False)
+            for season in user_config.season:
+                f = open("file_loc.txt", "a")
+                f.write(f'{city}/{season}/{feeder}' + "\n")
