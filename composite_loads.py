@@ -516,6 +516,8 @@ if __name__ == "__main__":
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
     for city in user_config.city:
+        f = open("file_loc.txt", "a")
+        f.write(f'{city}' + "\n")
         if 'weather' in user_config.debug:
             weather = weather_season(location = city, day = 'weekday', aws = True)
         else:
