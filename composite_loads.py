@@ -517,6 +517,8 @@ if __name__ == "__main__":
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
     for city in user_config.city:
+        if not os.path.isdir(city):
+            os.mkdir(city)
         f = open("debug_loc.txt", "a")
         f.write(f'{city}' + "\n")
         if 'weather' in user_config.debug:
