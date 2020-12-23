@@ -216,7 +216,7 @@ def weather_season(location, day, aws, showplots = False):
 
     return [low_day_temp, spring_temp, high_day_temp]
 
-def loadshape(location, sensitivities, day, weather, showplots = False):
+def loadshape(location, sensitivities, day, weather, btype, showplots = False):
     low_day_temp = weather[0]
     spring_temp = weather[1]
     high_day_temp = weather[2]
@@ -268,14 +268,14 @@ def loadshape(location, sensitivities, day, weather, showplots = False):
         plt.plot(qhigh,'--', color = 'y')
         plt.xlabel("Hour of day")
         plt.ylabel("Load (kW/sqft)")
-        plt.title("Loadshape for %s %s %s" %(location, col, day))
+        plt.title("Loadshape for %s %s %s %s" %(location, btype, col, day))
         plt.grid()
         #plt.close()
         #plt.savefig("noaa_loadshape/%s/%s_loadshape.png" %(location, day))
         #plt.legend(t.keys())
         if showplots:
             #plt.show()
-            plt.savefig(f'{location}/Loadshape_{location}_{col}_{day}.png')
+            plt.savefig(f'{location}/Loadshape_{location}_{btype}_{col}_{day}.png')
         load_dict[col] = np.array([p,q,r])
 
     return load_dict
@@ -339,7 +339,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         summer = []
         if showplots:
             print(btype)
-        loads = loadshape(location, sensitivities, 'weekday', weather, showplots = showplots)
+        loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, showplots = showplots)
         try:
             area, bcount = feeder_comp[(feeder_comp['feeder_type'] == feeder) & (feeder_comp['building_type'] == inverse_mapping(build_map)[btype])].iloc[0][3:]
         except:
@@ -417,7 +417,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         spring = []
         summer = []
 
-        loads = loadshape(location, sensitivities, 'weekday', weather, showplots = showplots)
+        loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, showplots = showplots)
         try:
             area, bcount = feeder_comp[(feeder_comp['feeder_type'] == feeder) & (feeder_comp['building_type'] == inverse_mapping(build_map)[btype])].iloc[0][3:]
         except:
