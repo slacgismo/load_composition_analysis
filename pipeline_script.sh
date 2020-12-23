@@ -6,3 +6,4 @@ do
 	f=$(awk NR==$i file_loc.txt)
 	cp -r $f/*.csv $OPENFIDO_OUTPUT
 done
+cp -r *.png $OPENFIDO_OUTPUT

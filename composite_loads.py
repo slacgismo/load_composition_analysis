@@ -124,7 +124,7 @@ def get_keys(dictionary, val):
 def inverse_mapping(f):
     return f.__class__(map(reversed, f.items()))
 
-def weather_season(location, day, aws):
+def weather_season(location, day, aws, showplots = False):
 
     if day == "weekday":
         weekday = 1
@@ -268,13 +268,14 @@ def loadshape(location, sensitivities, day, weather, showplots = False):
         plt.plot(qhigh,'--', color = 'y')
         plt.xlabel("Hour of day")
         plt.ylabel("Load (kW/sqft)")
-        plt.title("Load shape for %s %s %s" %(location, col, day))
+        plt.title("Loadshape for %s %s %s" %(location, col, day))
         plt.grid()
         #plt.close()
         #plt.savefig("noaa_loadshape/%s/%s_loadshape.png" %(location, day))
         #plt.legend(t.keys())
         if showplots:
-            plt.show()
+            #plt.show()
+            plt.savefig(f'{location}/Loadshape_{location}_{col}_{day}.png')
         load_dict[col] = np.array([p,q,r])
 
     return load_dict
@@ -515,9 +516,15 @@ if __name__ == "__main__":
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
     for city in user_config.city:
-        weather = weather_season(location = city, day = 'weekday', aws = True)
+        if 'weather' in user_config.debug:
+            weather = weather_season(location = city, day = 'weekday', aws = True)
+        else:
+            weather = weather_season(location = city, day = 'weekday', aws = True)
         for feeder in user_config.feeder_type:
-            comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, debug = False)
+            if 'loadshape' in user_config.debug:
+                comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, showplots = True)
+            else:
+                comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, showplots = False)
             for season in user_config.season:
                 f = open("file_loc.txt", "a")
                 f.write(f'{city}/{season}/{feeder}' + "\n")
