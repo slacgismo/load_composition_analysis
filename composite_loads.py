@@ -510,13 +510,14 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 
 if __name__ == "__main__":
     open("file_loc.txt", "w").close()
+    open("debug_loc.txt", "w").close()
     with open(f'ceus_sens.pickle', 'rb') as file:
         ceus_sens = pickle.load(file)
     with open(f'rbsa_sens.pickle', 'rb') as file:
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
     for city in user_config.city:
-        f = open("file_loc.txt", "a")
+        f = open("debug_loc.txt", "a")
         f.write(f'{city}' + "\n")
         if 'weather' in user_config.debug:
             weather = weather_season(location = city, day = 'weekday', aws = True)
