@@ -521,6 +521,15 @@ if __name__ == "__main__":
         f.write(f'{city}' + "\n")
         if 'weather' in user_config.debug:
             weather = weather_season(location = city, day = 'weekday', aws = True)
+            fig, ax = plt.subplots(figsize = (10,8))
+            ax.plot(weather[0], color = 'red', label = 'winter')
+            ax.plot(weather[1], color = 'yellow', label = 'spring')
+            ax.plot(weather[2], color = 'blue', label = 'summer')
+            ax.set_xlabel('Hour of the Day')
+            ax.set_ylabel('Heat Index (F)')
+            ax.set_title(f'{city} Weather Profile')
+            ax.legend();
+            plt.savefig(f'{city}/{city}_weather_profile.png')
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
         for feeder in user_config.feeder_type:
