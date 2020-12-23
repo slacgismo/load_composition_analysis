@@ -276,6 +276,7 @@ def loadshape(location, sensitivities, day, weather, btype, showplots = False):
         if showplots:
             #plt.show()
             plt.savefig(f'{location}/Loadshape_{location}_{btype}_{col}_{day}.png')
+            plt.close()
         load_dict[col] = np.array([p,q,r])
 
     return load_dict
@@ -530,8 +531,9 @@ if __name__ == "__main__":
             ax.set_xlabel('Hour of the Day')
             ax.set_ylabel('Heat Index (F)')
             ax.set_title(f'{city} Weather Profile')
-            ax.legend();
+            ax.legend()
             plt.savefig(f'{city}/{city}_weather_profile.png')
+            plt.close()
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
         for feeder in user_config.feeder_type:
