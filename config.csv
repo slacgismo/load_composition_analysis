@@ -2,3 +2,5 @@ CITIES=BOS MIA
 FEEDERS=residential
 SEASONS=summer winter
 PLOT=weather loadshape
+UPLOADTO=s3bucketurl
+AWSTOKEN=abcd1234
