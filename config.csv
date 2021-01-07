@@ -1,0 +1,4 @@
+CITIES=BOS MIA
+FEEDERS=residential
+SEASONS=summer winter
+PLOT=weather loadshape
