@@ -517,10 +517,10 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 
 if __name__ == "__main__":
     config = pd.read_csv('user_config.csv')
-    cities = config_cleaner(np.array['City'])
-    seasons = config_cleaner(np.array['Season'])
-    ftype = config_cleaner(np.array['Feeder'])
-    debug = config_cleaner(np.array['Intermediate Results'])
+    cities = config_cleaner(config['City'])
+    seasons = config_cleaner(config['Season'])
+    ftype = config_cleaner(config['Feeder'])
+    debug = config_cleaner(config['Intermediate Results'])
     if len(seasons) == 0:
         seasons = ['Summer', 'Winter', 'Spring']
     if len(ftype) == 0:
