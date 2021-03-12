@@ -76,6 +76,12 @@ def noaa_datetime(ts):
 
 def get_datetime_ceus(ts):
     return datetime.datetime.strptime(ts,"%Y-%m-%d %H:%M:%S")
+def config_cleaner(x):
+    x2 = []
+    for i in x:
+        if i!=0:
+            x2.append(i)
+    return x2
 
 def read_files():
     siteid_df_dict = {}
@@ -510,6 +516,15 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
+    config = pd.read_csv('user_config.csv')
+    cities = config_cleaner(np.array['City'])
+    seasons = config_cleaner(np.array['Season'])
+    ftype = config_cleaner(np.array['Feeder'])
+    debug = config_cleaner(np.array['Intermediate Results'])
+    if len(seasons) == 0:
+        seasons = ['Summer', 'Winter', 'Spring']
+    if len(ftype) == 0:
+        ftype = ['residential', 'commercial', 'mixed', 'rural']
     open("file_loc.txt", "w").close()
     open("debug_loc.txt", "w").close()
     with open(f'ceus_sens.pickle', 'rb') as file:
@@ -517,12 +532,12 @@ if __name__ == "__main__":
     with open(f'rbsa_sens.pickle', 'rb') as file:
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
-    for city in user_config.city:
+    for city in cities:
         if not os.path.isdir(city):
             os.mkdir(city)
         f = open("debug_loc.txt", "a")
         f.write(f'{city}' + "\n")
-        if 'weather' in user_config.debug:
+        if 'weather' in debug:
             weather = weather_season(location = city, day = 'weekday', aws = True)
             fig, ax = plt.subplots(figsize = (10,8))
             ax.plot(weather[0], color = 'red', label = 'winter')
@@ -536,11 +551,11 @@ if __name__ == "__main__":
             plt.close()
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
-        for feeder in user_config.feeder_type:
-            if 'loadshape' in user_config.debug:
+        for feeder in ftype:
+            if 'loadshape' in debug:
                 comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, showplots = True)
             else:
                 comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, showplots = False)
-            for season in user_config.season:
+            for season in seasons:
                 f = open("file_loc.txt", "a")
                 f.write(f'{city}/{season}/{feeder}' + "\n")
