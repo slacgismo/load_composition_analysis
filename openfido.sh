@@ -1,6 +1,9 @@
+set -u
+set -e
+set -x
 pip install -r user_requirements.txt
 python composite_loads.py
-cp -r $OPENFIDO_INPUT/user_config.csv $PWD
+cp $OPENFIDO_INPUT/user_config.csv $PWD
 len_file=$(wc -l < file_loc.txt)
 len_debug=$(wc -l < debug_loc.txt)
 for i in $(seq 1 $len_file)
