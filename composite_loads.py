@@ -563,4 +563,4 @@ if __name__ == "__main__":
             for season in seasons:
                 #season = season.lower()
                 f = open("file_loc.txt", "a")
-                f.write(f'{city}/{season}/{feeder}' + "\n")
+                f.write(f'{city}/{season.lower()}/{feeder}' + "\n")
