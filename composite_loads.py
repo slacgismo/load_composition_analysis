@@ -322,10 +322,10 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 
         if not os.path.isdir(location):
             os.mkdir(location)
-        if not os.path.isdir('%s/%s' %(location, 'composite')):
-            os.mkdir('%s/%s' %(location, 'composite'))
-        if not os.path.isdir('%s/%s/%s' %(location, 'composite', feeder)):
-            os.mkdir('%s/%s/%s' %(location, 'composite', feeder))
+        #if not os.path.isdir('%s/%s' %(location, 'composite')):
+        #    os.mkdir('%s/%s' %(location, 'composite'))
+        #if not os.path.isdir('%s/%s' %(location,  feeder)):
+        #    os.mkdir('%s/%s/%s' %(location, 'composite', feeder))
 
 
         tot_eu_ceus = {}
@@ -467,6 +467,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         winter_build += np.dot(res_comp_mat, np.array(winter)*area*bcount)
         spring_build += np.dot(res_comp_mat, np.array(spring)*area*bcount)
         summer_build += np.dot(res_comp_mat, np.array(summer)*area*bcount)
+
     #for col in range(len(eus)):
      #   tot_eu_rbsa[eus[col]] = {'winter': winter_build[col], 'spring': spring_build[col], 'summer': summer_build[col]}
 
@@ -482,6 +483,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         if not os.path.isdir('%s/%s/%s' %(location, season, feeder)):
             os.mkdir('%s/%s/%s' %(location, season, feeder))
         arr = season_dict[season]/sum(season_dict[season])
+        #print(arr)
         #for i in range(len(arr)):
          #   for j in range(len(arr[i])):
           #      arr[i][j] = round(j*100, 1)
@@ -516,7 +518,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
-    config_df = pd.read_csv('user_config.csv')
+    config_df = pd.read_csv('user_config.csv').fillna(0)
     cities = config_cleaner(config_df['City'])
     seasons = config_cleaner(config_df['Season'])
     ftype = config_cleaner(config_df['Feeder'])
@@ -533,6 +535,7 @@ if __name__ == "__main__":
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
     for city in cities:
+        #city = city.lower()
         if not os.path.isdir(city):
             os.mkdir(city)
         f = open("debug_loc.txt", "a")
@@ -552,10 +555,12 @@ if __name__ == "__main__":
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
         for feeder in ftype:
+            feeder = feeder.lower()
             if 'loadshape' in debug:
                 comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, showplots = True)
             else:
                 comp_enduses(weather = weather, ceus_sens = ceus_sens, rbsa_sens = rbsa_sens, location = city, feeder = feeder, electrification = electrification, showplots = False)
             for season in seasons:
+                #season = season.lower()
                 f = open("file_loc.txt", "a")
                 f.write(f'{city}/{season}/{feeder}' + "\n")
