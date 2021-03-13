@@ -516,11 +516,11 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
-    config = pd.read_csv('user_config.csv')
-    cities = config_cleaner(config['City'])
-    seasons = config_cleaner(config['Season'])
-    ftype = config_cleaner(config['Feeder'])
-    debug = config_cleaner(config['Intermediate Results'])
+    config_df = pd.read_csv('user_config.csv')
+    cities = config_cleaner(config_df['City'])
+    seasons = config_cleaner(config_df['Season'])
+    ftype = config_cleaner(config_df['Feeder'])
+    debug = config_cleaner(config_df['Intermediate Results'])
     if len(seasons) == 0:
         seasons = ['Summer', 'Winter', 'Spring']
     if len(ftype) == 0:
