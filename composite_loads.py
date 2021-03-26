@@ -9,6 +9,7 @@ import git_setup_config as setup_config
 import user_config
 import pickle
 import requests
+from csv import reader
 class config:
     eu_dict_ceus = dict(zip(
 ["heat_pump", "other_electric_heat", "cooling", "water_heating", "cooking"],
@@ -493,9 +494,11 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         print(df)
         #df.insert(0, 'Component', np.array(res_comp['component']))
         df.insert(0, 'Component', np.array(['MOTOR A', 'MOTOR B', 'MOTOR C', 'MOTOR D', 'POWER ELECTRONICS', 'CONSTANT IMPEDANCE', 'CONSTANT CURRENT']))
-        df = df.set_index('Component')
+        #df = df.set_index('Component')
         df.to_csv('%s/%s/%s/%s_%s_%s.csv' %(location, season, feeder, location, season, feeder), index = False)
-        df.T.to_csv('%s/%s/%s/%s_%s_%s_transposed.csv' %(location, season, feeder, location, season, feeder), index = False)
+        df = df.set_index('Component').T
+        df.insert(0, 'Hour', df.index.values)
+        df.to_csv('%s/%s/%s/%s_%s_%s_transposed.csv' %(location, season, feeder, location, season, feeder), index = False)
         #plt.figure(figsize = (18,6))
         fig, ax = plt.subplots(1,2, figsize = (18,6))
         #plt.show()
@@ -518,11 +521,20 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
-    config_df = pd.read_csv('user_config.csv').fillna(0)
-    cities = config_cleaner(config_df['City'])
-    seasons = config_cleaner(config_df['Season'])
-    ftype = config_cleaner(config_df['Feeder'])
-    debug = config_cleaner(config_df['Intermediate Results'])
+    config_dict = {}
+    with open('user_config.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        for row in csv_reader:
+            row_new = []
+            for r in row:
+                if r != "":
+                    row_new.append(r)
+                    config_dict[row_new[0]] = row_new[1:]
+    #config_df = pd.read_csv('user_config.csv').fillna(0)
+    cities = config_dict['City']
+    seasons = config_dict['Season']
+    ftype = config_dict['Feeder']
+    debug = config_dict['Intermediate Results']
     if len(seasons) == 0:
         seasons = ['Summer', 'Winter', 'Spring']
     if len(ftype) == 0:
