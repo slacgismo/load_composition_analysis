@@ -1,4 +1,4 @@
-CITIES=BOS MIA
+CITIES=SFO LAX
 FEEDERS=residential
 SEASONS=summer winter
 PLOT=weather loadshape
