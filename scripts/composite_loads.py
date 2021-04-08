@@ -6,7 +6,7 @@ from calendar import monthrange
 import matplotlib.pyplot as plt
 import sensitivity_new as sn
 import git_setup_config as setup_config
-import user_config
+#import user_config
 import pickle
 import requests
 from csv import reader
@@ -522,7 +522,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 
 if __name__ == "__main__":
     config_dict = {}
-    with open('user_config.csv', 'r') as read_obj:
+    with open('../user_config.csv', 'r') as read_obj:
         csv_reader = reader(read_obj)
         for row in csv_reader:
             row_new = []
