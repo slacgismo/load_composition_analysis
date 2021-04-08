@@ -541,9 +541,9 @@ if __name__ == "__main__":
         ftype = ['residential', 'commercial', 'mixed', 'rural']
     open("file_loc.txt", "w").close()
     open("debug_loc.txt", "w").close()
-    with open(f'ceus_sens.pickle', 'rb') as file:
+    with open(f'../data/ceus_sens.pickle', 'rb') as file:
         ceus_sens = pickle.load(file)
-    with open(f'rbsa_sens.pickle', 'rb') as file:
+    with open(f'../data/rbsa_sens.pickle', 'rb') as file:
         rbsa_sens = pickle.load(file)
     electrification = load_electrification()
     for city in cities:
