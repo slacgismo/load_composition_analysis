@@ -7,12 +7,17 @@ import pandas as pd
 import datetime as dt
 import numpy as np
 import pytz
+from pathlib import Path
+
+print(sys.version)
 
 UTC = pytz.timezone("UTC")
 my_tzinfo = UTC
 
 def find_csvfile(name):
-    return str(sys.modules[__name__].__file__).replace(f"/noaa.py",f"/{name}")
+    newname = str(sys.modules[__name__].__file__).replace(str(Path(f"/noaa.py")),str(Path(f"/{name}")))
+    print(f"find_csvfile(name='{name}') -> {newname}")
+    return newname
 
 def set_tzinfo(timezone):
     global my_tzinfo
@@ -66,7 +71,9 @@ def utchour(data,column,modulo):
 def nop(msg):
     return
 
-def collate_data(filespec, timezone,
+def collate_data(location,
+        filespec = 'auto',
+        timezone = 'auto',
         columns = {
             'DATE': 'localtime',
             'HourlyDryBulbTemperature': 'temperature',
@@ -84,15 +91,35 @@ def collate_data(filespec, timezone,
         returnas = pd.DataFrame,
         index = "localtime",
         progress=nop,
-        saveas = None,
+        saveas = 'auto',
         refresh = 'never'):
+    """Collate NOAA LCD weather downloads
+
+    Parameters:
+        columns (dict) - specify NOAA LCD columns to map into collated data
+        dtype (dict) - specify the data types for columns to collate
+        process (dict) - specify post-processing functions and parameters
+        drop_duplicates (str) - specify column index to drop duplicates on
+        returnas (callable or class) - specify return data type
+        progress (callable) - specify progress callback function
+        saveas (str) - specify CSV file to save data (default is None)
+        refresh (str) - specify when to refresh (default is 'never')
+    Returns:
+        varies - data processed by `convert` parameter
+    """
+    if filespec == 'auto':
+        filespec = f"noaa/{location}-*.csv"
+    if timezone == 'auto':
+        timezone = get_location(location,"timezone")
+    if saveas == 'auto':
+        saveas = f"noaa/{location}.csv"
     set_tzinfo(timezone)
     if saveas:
         csvsave = find_csvfile(saveas)
         if os.path.exists(csvsave) and refresh == 'never':
             return pd.read_csv(csvsave)
     csvlist = sorted(glob.glob(filespec))
-    result = pd.DataFrame()
+    result = []
     for csvname in csvlist:
         progress(f"Reading {csvname}...")
         data = pd.read_csv(find_csvfile(csvname),
@@ -103,7 +130,8 @@ def collate_data(filespec, timezone,
             mapper=columns,
             axis='columns')
         data.dropna(inplace=True)
-        result = result.append(data)
+        result.append(data)
+    result = pd.concat(result)
     for key,value in process.items():
         progress(f"Computing {key}...")
         if callable(value[2]):
@@ -128,14 +156,25 @@ def collate_data(filespec, timezone,
 def to_day(t):
     return int(dt.datetime.fromisoformat(t).timestamp()/86400)
 
-def extract_daily_minmax(filespec,
-        location = None,
+def extract_daily_minmax(location,
+        filespec = 'auto',
         percentiles = [0.1,0.9],
         column = "heatindex",
         localtime = "localtime",
-        progress = nop):
+        ):
+    """Extract daily min/max temperature values
+
+    Parameters:
+        filespec (str) - file containing weather data
+        percentiles (list) - min and max percentiles
+        localtime (str) - column name specifying localtime
+
+    Returns:
+        dict = {"min": min-value, "max": max-value}
+    """
+    if filespec == 'auto':
+        filespec = f"noaa/{location}.csv"
     result = pd.DataFrame()
-    progress(f"Reading {filespec}...")
     data = pd.read_csv(find_csvfile(filespec),converters={localtime:to_day}).rename(mapper={localtime:"day"},axis="columns")
     result = pd.DataFrame()
     days = data.groupby(["day"])[column]
@@ -146,36 +185,68 @@ def extract_daily_minmax(filespec,
     min = result[result["minrank"]>percentiles[0]]["min"].min()
     max = result[result["maxrank"]>percentiles[1]]["max"].max()
     values = {"min":min,"max":max}
-    if location:
-        return {location: values}
-    else:
-        return values
+    return values
+
+def to_dict(d):
+    try:
+        return eval(d)
+    except:
+        return {}
 
 locations = pd.read_csv(find_csvfile("locations.csv"),converters={
         "location":str,
-        "zipcode":str,
+        "airport":str,
         "source":str,
+        "city":str,
+        "station":to_dict,
+        "zipcode":str,
         "latitude":to_float,
         "longitude":to_float,
         "elevation":to_float,
+        "timezone":str,
+        "tzoffset":int,
+        "dst":int,
     }).set_index("location")
 
 def get_location(location,info=None):
+    """Get location information
+
+    Parameters:
+        location (str) - location code (e.g., "PDX")
+        info (str) - column name (e.g., "city")
+
+    Returns:
+        dict - if 'info' is 'None'
+        value - if 'info' is a valid column name
+    """
     global locations
     if info:
         return locations.loc[location][info]
     else:
         return {location: dict(locations.loc[location])}
 
+station_list = locations[locations["source"]=="NOAA"]["station"].to_dict()
+timezones = locations[locations["source"]=="NOAA"]["timezone"].to_dict()
+
+def get_minmax_data(warn=False):
+    minmax_csv = find_csvfile("noaa/minmax.csv")
+    if not os.path.exists(minmax_csv):
+        df = [] 
+        for location in station_list.keys():
+            try:
+                row = extract_daily_minmax(location)
+                row["location"] = location
+                row["min"] = [row["min"]]
+                row["max"] = [row["max"]]
+                df.append(pd.DataFrame(data=row))
+            except:
+                if warn:
+                    print(f"{location} data not found")
+        data = pd.concat(df).set_index("location")
+        data.to_csv(minmax_csv)
+    else:
+        data = pd.read_csv(minmax_csv).set_index("location")
+    return data
+
 if __name__ == '__main__':
-    def show_progress(msg):
-        print(msg)
-        sys.stdout.flush()
-
-    data = collate_data("noaa/PDX-*.csv","US/Pacific",
-        saveas="noaa/PDX.csv",
-        progress=show_progress,
-        refresh='never')
-
-    minmax = extract_daily_minmax("noaa/PDX.csv")
-    print(f"PDX: {minmax}")
+    print(get_minmax_data())

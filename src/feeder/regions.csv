@@ -1,0 +1,8 @@
+region,name,load_normalization
+NERC,North American Electricity Reliability Corporation,SUMMER
+NPCC,Northwest Power Coordinating Council,WINTER
+MRO,Midwest Reliability Organization,SUMMER
+RF,ReliabilityFirst,SUMMER
+SERC,Southeast Reliability Corporation,SUMMER
+TRE,Texas Reliability Entity,SUMMER
+WECC,Western Electric Coordinating Council,SUMMER

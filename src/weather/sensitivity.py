@@ -5,6 +5,7 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as st
+import pwlf
 
 class config:
     """Load model analysis configuration
@@ -51,6 +52,9 @@ Processing:
     MaxIterations   The maximum number of iterations allowing when getting
                     the base temperature (default 50)
 
+    Model           The type of model to use, i.e., 0=fixed-width, 1=general
+                    (default 0)
+
     """
     Tdiff = 10.0
     Tbase = 60.0
@@ -64,6 +68,7 @@ Processing:
     NullValue = float('nan')
     SkipRows = 1
     MaxIterations = 50
+    Model = 1
 
 def read_datetime(x,format=config.DatetimeFormat):
     """
@@ -295,6 +300,14 @@ def get_load(model,hour,temperature,convert=list,normalize=False):
 
     Returns: float, list-like, or output of 'convert'
     """
+    if config.Model == 0:
+        return get_load_0(model,hour,temperature,convert=list,normalize=False)
+    elif config.Model == 1:
+        return get_load_1(model,hour,temperature,convert=list,normalize=False)
+    else:
+        raise Exception(f"config.Model = {config.Model} is not valid")
+
+def get_load_0(model,hour,temperature,convert,normalize):
     def normal(x,normalize):
         if normalize:
             x = np.array(x)
@@ -335,6 +348,9 @@ def get_load(model,hour,temperature,convert=list,normalize=False):
                 data.append(get_load(model,int(h),float(t)))
             result.append(data)
     return convert(normal(result,normalize))
+
+def get_load_1(model,hour,temperature,convert,normalize):
+    return model[hour].get_predict(temperature)
 
 def get_model(data, datetime_col, power_col, temperature_col,
         skiprows=config.SkipRows,
@@ -385,6 +401,20 @@ def get_model(data, datetime_col, power_col, temperature_col,
         Scool     cooling load temperature sensitivity (MW/degF)
 
     """
+    if config.Model == 0:
+        return get_model_0(data,datetime_col,power_col,temperature_col,
+            skiprows,ofile,saveplots)
+    elif config.Model == 1:
+        return get_model_1(data,datetime_col,power_col,temperature_col,
+            skiprows,ofile,saveplots)
+    else:
+        raise Exception(f"config.Model = {config.Model} is not valid")
+
+def get_model_0(data, datetime_col, power_col, temperature_col,
+        skiprows=config.SkipRows,
+        ofile=None,
+        saveplots=config.SavePlots):
+    """See get_model()"""
     column_list = list(data.columns)
     column_list.insert(0,'datetime')
     power_name = column_list[power_col]
@@ -438,7 +468,7 @@ def get_model(data, datetime_col, power_col, temperature_col,
             plt.xlabel('Temperature (degF)')
             plt.ylabel('Load (MW)')
             plt.title(f'Load profile for hour {h}')
-            plt.savefig('%s-profile-%02d.png'%(name,h))
+            plt.savefig('%s-profile-%02d.png'%(power_name,h))
             plt.close()
 
     model = pd.DataFrame(model).set_index("Hour")
@@ -463,7 +493,7 @@ def get_model(data, datetime_col, power_col, temperature_col,
         plt.xlabel('Base load (MW)')
         plt.ylabel('Balance temperature (degF)')
         plt.title('Balance temperature vs Base load')
-        plt.savefig(f'{name}-balance-load.png')
+        plt.savefig(f'{power_name}-balance-load.png')
         plt.close()
 
         plt.figure()
@@ -472,7 +502,7 @@ def get_model(data, datetime_col, power_col, temperature_col,
         plt.xlabel("Hour of day")
         plt.ylabel("Balance temperature (degF)")
         plt.title(f'Balance temperature (+/- {config.Tdiff/2} degF)')
-        plt.savefig(f"{name}-loadshape.png")
+        plt.savefig(f"{power_name}-loadshape.png")
         plt.close()
 
         plt.figure()
@@ -484,7 +514,7 @@ def get_model(data, datetime_col, power_col, temperature_col,
         plt.ylabel('Load (MW)')
         plt.title('Load shapes')
         plt.legend(["Base load","Peak heating","Peak cooling"])
-        plt.savefig(f"{name}-balance.png")
+        plt.savefig(f"{power_name}-balance.png")
         plt.close()
 
         plt.figure()
@@ -496,10 +526,142 @@ def get_model(data, datetime_col, power_col, temperature_col,
         plt.legend(['Heating','Cooling','Baseload'])
         plt.title('Load temperature sensitivity')
         plt.grid()
-        plt.savefig(f"{name}-sensitivity.png")
+        plt.savefig(f"{power_name}-sensitivity.png")
         plt.close()
 
     return model
+class Model:
+    
+    def __init__(self,x,y,n):
+    
+        self.model = pwlf.PiecewiseLinFit(x,y)
+        self.data = (x,y)
+        self.n = n
+        self.x = X = self.model.fit(n)
+        self.y = Y = self.model.predict(X)
+        self.s = S = (Y[1:]-Y[0:-1]) / (X[1:]-X[0:-1])
+        self.i = (Y[1:]+Y[0:-1] -S*(X[1:]+X[0:-1])) / 2
+    
+    def __str__(self):
+        result = f"{repr(self)}\n    n = {self.n}\n"
+        result += f"    x = {self.x}\n"
+        result += f"    y = {self.y}\n"
+        result += f"    s = {self.s}\n"
+        result += f"    i = {self.i}\n"
+        return result
+    
+    def to_dict(self):
+        return {"x": self.x, "y": self.y, "s" : self.s, "i" : self.i}
+    
+    def get_data(self):
+        return model.data
+    
+    def predict(self,x):
+        return self.model.predict(x)
+
+def get_model_1(data, datetime_col, power_col, temperature_col,
+        skiprows=config.SkipRows,
+        ofile=None,
+        saveplots=config.SavePlots):
+    
+    Pbase = []
+    Pheat = []
+    Pcool = []
+    Tmin = []
+    Theat = []
+    Tcool = []
+    Tmax = []
+    Sbase = []
+    Sheat = []
+    Scool = []
+
+    if saveplots:
+        fig = plt.figure(figsize=(24,24))
+        ax = fig.subplots(8,3).flatten()
+        
+    xmin = data["temperature"].min()
+    xmax = data["temperature"].max()
+    ymin = data["power"].min()
+    ymax = data["power"].max()
+
+    hour = list(map(lambda h: get_hours(data,[h]),range(24)))
+    model = []
+    for h in range(24):
+
+        T = hour[h]["temperature"]
+        P = np.array(hour[h]["power"])
+        
+        model.append(Model(T,P,3))
+        
+        if model[h].s[0] >= model[h].s[1] and model[h].s[1] >= model[h].s[2]: # both slopes are too small
+
+            model[h] = Model(T,P,1) # reduce model to simple linear regression
+
+            Pbase.append((model[h].y[0]+model[h].y[1])/2)
+            Pheat.append(np.nan)
+            Pcool.append(np.nan)
+            Tmin.append(model[h].x[0])
+            Theat.append(np.nan)
+            Tcool.append(np.nan)
+            Tmax.append(model[h].x[1])
+            Sbase.append(model[h].s[0])
+            Sheat.append(np.nan)
+            Scool.append(np.nan)
+
+        elif model[h].s[0] >= model[h].s[1] : # only heating slope is too small
+            
+            model[h] = Model(T,P,2) # remove heating segment
+
+            Pbase.append((model[h].y[0]+model[h].y[1])/2)
+            Pheat.append(np.nan)
+            Pcool.append(model[h].y[1])
+            Tmin.append(model[h].x[0])
+            Theat.append(np.nan)
+            Tcool.append(model[h].x[1])
+            Tmax.append(model[h].x[2])
+            Sbase.append(model[h].s[0])
+            Sheat.append(np.nan)
+            Scool.append(model[h].s[1])
+
+        elif model[h].s[1] >= model[h].s[2] : # only cooling slope is too small
+
+            model[h] = Model(T,P,2) # remove cooling segment
+
+            Pbase.append((model[h].y[1]+model[h].y[2])/2)
+            Pheat.append(model[h].y[0])
+            Pcool.append(np.nan)
+            Tmin.append(model[h].x[0])
+            Theat.append(model[h].x[1])
+            Tcool.append(np.nan)
+            Tmax.append(model[h].x[2])
+            Sbase.append(model[h].s[1])
+            Sheat.append(model[h].s[0])
+            Scool.append(np.nan)
+
+        else: # both slopes are ok
+            
+            Pbase.append((model[h].y[1]+model[h].y[2])/2)
+            Pheat.append(model[h].y[0])
+            Pcool.append(model[h].y[-1])
+            Tmin.append(model[h].x[0])
+            Theat.append(model[h].x[1])
+            Tcool.append(model[h].x[2])
+            Tmax.append(model[h].x[-1])
+            Sbase.append(model[h].s[1])
+            Sheat.append(model[h].s[0])
+            Scool.append(model[h].s[2])
+
+        if saveplots:
+            ax[h].plot(T,P,'.',ms=0.1,color='blue')
+            ax[h].plot(model[h].x,model[h].y,color='black')
+            ax[h].set_xlim([xmin,xmax])
+            ax[h].set_ylim([ymin,ymax])
+            ax[h].set_title(f"Hour {h}")
+            ax[h].grid()
+        
+    return pd.DataFrame({"Pbase": Pbase, "Pheat": Pheat, "Pcool": Pcool,
+                         "Tmin":  Tmin,  "Theat": Theat, "Tcool": Tcool, "Tmax": Tmax,
+                         "Sbase": Sbase, "Sheat": Sheat, "Scool": Scool})
 
 def selftest():
     """
@@ -535,7 +697,7 @@ def selftest():
     23   1,934.0 2,853.5 3,009.2 22.2  52.0   62.0   85.3  1.3    -30.9  46.1  
     """
     data = load_data(ifile='testdata.csv')
-    model = get_model(data,datetime_col=0,power_col=1,temperature_col=2)
+    model = get_model(data,datetime_col=0,power_col=1,temperature_col=2,saveplots=True)
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
     pd.set_option('display.width', None)

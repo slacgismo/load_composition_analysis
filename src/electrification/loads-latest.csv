@@ -1,177 +1,177 @@
 location,city,region,building_type,heat_pump,other_electric_heat,cooling,water_heating,cooking
-YFC,Fredericton NB,Canada,residential,0,0.67,0,0,0
-YHZ,Halifax NS,Canada,residential,0,0.33,0,0,0
-YOW,Ottawa ON,Canada,residential,0,0.28,0,0,0
-YQB,Quebec City QC,Canada,residential,0,0.77,0,0,0
-YQT,Thunder Bay ON,Canada,residential,0,0.26,0,0,0
-YSB,Sudbury ON,Canada,residential,0,0.15,0,0,0
-YUL,Montreal QC,Canada,residential,0,0.77,0,0,0
-YUY,Rouyn Noranda QC,Canada,residential,0,0.77,0,0,0
-YYZ,Toronto ON,Canada,residential,0,0.15,0,0,0
-YZV,SeptIles QC,Canada,residential,0,0.77,0,0,0
-YYC,Calgary AB,Canada,residential,0,0.08,0,0,0
-PWM,Portland ME,New England,residential,0.03,0.1,0.75,0.36,0.59
-BTW,Burlington VT,New England,residential,0.03,0.1,0.75,0.36,0.59
-PVD,Providence RI,New England,residential,0.03,0.1,0.75,0.36,0.59
-CON,Concord NH,New England,residential,0.03,0.1,0.75,0.36,0.59
-BDR,Bridgeport CT,New England,residential,0.03,0.1,0.75,0.36,0.59
-BDL,Hartford CT,New England,residential,0.03,0.1,0.75,0.36,0.59
-BOS,Boston MA,New England,residential,0.03,0.1,0.75,0.36,0.59
-ORH,Worcester MA,New England,residential,0.03,0.1,0.75,0.36,0.59
-NYC,New York NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-ALB,Albany NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-UCA,Utica NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-SYR,Syracuse NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-BUF,Buffalo NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-RST,Rochester NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-PBG,Plattsburg NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-PHL,Philadelphia PA,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-PIT,Philadelphia PA,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
-CLE,Cleveland OH,East North Central,residential,0.03,0.17,0.92,0.34,0.57
-ORD,Chicago IL,East North Central,residential,0.03,0.17,0.92,0.34,0.57
-DTW,Detroit MI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
-MSN,Madison WI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
-MKE,Milwaukee WI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
-GRB,Green Bay WI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
-DLH,Duluth MN,West North Central,residential,0.04,0.18,0.92,0.4,0.75
-MSP,Minneapolis MN,West North Central,residential,0.04,0.18,0.92,0.4,0.75
-STL,St Louis MO,West North Central,residential,0.04,0.18,0.92,0.4,0.75
-MCI,Kansas City MO,West North Central,residential,0.04,0.18,0.92,0.4,0.75
-FAR,Fargo ND,West North Central,residential,0.04,0.18,0.92,0.4,0.75
-OMA,Omaha NE,West North Central,residential,0.04,0.18,0.92,0.4,0.75
-CRW,Charleston WV,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-MIA,Miami FL,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-BWI,Baltimore MD,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-ATL,Atlanta GA,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-ECG,Elizabeth City NC,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-CHS,Charleston SC,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-CLT,Charlotte SC,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-JAX,Jacksonville FL,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
-SDF,Louisville KY,East South Central,residential,0.24,0.39,0.93,0.76,0.75
-BNA,Nashville TN,East South Central,residential,0.24,0.39,0.93,0.76,0.75
-GAI,Montgomery AL,East South Central,residential,0.24,0.39,0.93,0.76,0.75
-LIT,Little Rock AK,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-MSY,New Orleans LA,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-OKC,Oklahoma City OK,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-AMA,Amarillo TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-SPS,Wichita Falls TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-DFW,Dallas TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-ABI,Abilene TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-MAF,Midland TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-AUS,Austin TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-IAH,Houston TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-TYR,Tyler TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-SAT,San Antonio TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-CRP,Corpus Christi TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
-CYS,Cheyenne WY,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-DEN,Denver CO,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-SLC,Salt Lake City UT,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-PHX,Phoenix AZ,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-SFO,San Francisco CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-SMF,Sacremento CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-LAX,Los Angeles CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-ONT,Ontario CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-PSP,Palm Springs CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-BFL,Bakersfield CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-PDX,Portland OR,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-SEA,Seattle WA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-GEI,Spokane WA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-NWI,Northwest Interior,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-NWC,Northwest Coast,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-NWV,Northwest Valley,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-NCC,Northern California Coast,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-NCV,Northern California Valley,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-SCC,Southern California Coast,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-SCI,Southern California Interior,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-SCV,Southern California Valley,Pacific,residential,0.07,0.25,0.66,0.32,0.53
-RMN,Rocky Mountains,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-DWS,Desert Southwest,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-HID,High Desert,Mountain,residential,0.08,0.19,0.78,0.31,0.67
-YFC,Fredericton NB,Canada,commercial,0,0.78,0,0,0
-YHZ,Halifax NS,Canada,commercial,0,0.34,0,0,0
-YOW,Ottawa ON,Canada,commercial,0,0.17,0,0,0
-YQB,Quebec City QC,Canada,commercial,0,0.62,0,0,0
-YQT,Thunder Bay ON,Canada,commercial,0,0.19,0,0,0
-YSB,Sudbury ON,Canada,commercial,0,0.12,0,0,0
-YUL,Montreal QC,Canada,commercial,0,0.62,0,0,0
-YUY,Rouyn Noranda QC,Canada,commercial,0,0.62,0,0,0
-YYZ,Toronto ON,Canada,commercial,0,0.12,0,0,0
-YZV,SeptIles QC,Canada,commercial,0,0.62,0,0,0
-YYC,Calgary AB,Canada,commercial,0,0.08,0,0,0
-PWM,Portland ME,New England,commercial,0.09,0.02,0.77,0.45,0.27
-BTW,Burlington VT,New England,commercial,0.09,0.02,0.77,0.45,0.27
-PVD,Providence RI,New England,commercial,0.09,0.02,0.77,0.45,0.27
-CON,Concord NH,New England,commercial,0.09,0.02,0.77,0.45,0.27
-BDR,Bridgeport CT,New England,commercial,0.09,0.02,0.77,0.45,0.27
-BDL,Hartford CT,New England,commercial,0.09,0.02,0.77,0.45,0.27
-BOS,Boston MA,New England,commercial,0.09,0.02,0.77,0.45,0.27
-ORH,Worcester MA,New England,commercial,0.09,0.02,0.77,0.45,0.27
-NYC,New York NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-ALB,Albany NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-UCA,Utica NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-SYR,Syracuse NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-BUF,Buffalo NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-RST,Rochester NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-PBG,Plattsburg NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-PHL,Philadelphia PA,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-PIT,Philadelphia PA,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
-CLE,Cleveland OH,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
-ORD,Chicago IL,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
-DTW,Detroit MI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
-MSN,Madison WI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
-MKE,Milwaukee WI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
-GRB,Green Bay WI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
-DLH,Duluth MN,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
-MSP,Minneapolis MN,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
-STL,St Louis MO,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
-MCI,Kansas City MO,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
-FAR,Fargo ND,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
-OMA,Omaha NE,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
-CRW,Charleston WV,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-MIA,Miami FL,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-BWI,Baltimore MD,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-ATL,Atlanta GA,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-ECG,Elizabeth City NC,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-CHS,Charleston SC,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-CLT,Charlotte SC,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-JAX,Jacksonville FL,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
-SDF,Louisville KY,East South Central,commercial,0.17,0.23,0.88,0.59,0.31
-BNA,Nashville TN,East South Central,commercial,0.17,0.23,0.88,0.59,0.31
-GAI,Montgomery AL,East South Central,commercial,0.17,0.23,0.88,0.59,0.31
-LIT,Little Rock AK,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-MSY,New Orleans LA,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-OKC,Oklahoma City OK,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-AMA,Amarillo TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-SPS,Wichita Falls TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-DFW,Dallas TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
 ABI,Abilene TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-MAF,Midland TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+ABI,Abilene TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+ALB,Albany NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+ALB,Albany NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+AMA,Amarillo TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+AMA,Amarillo TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+ATL,Atlanta GA,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+ATL,Atlanta GA,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
 AUS,Austin TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-IAH,Houston TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-TYR,Tyler TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-SAT,San Antonio TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-CRP,Corpus Christi TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
-CYS,Cheyenne WY,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
-DEN,Denver CO,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
-SLC,Salt Lake City UT,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
-PHX,Phoenix AZ,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
-SFO,San Francisco CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-SMF,Sacremento CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-LAX,Los Angeles CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-ONT,Ontario CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-PSP,Palm Springs CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+AUS,Austin TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+BDL,Hartford CT,New England,commercial,0.09,0.02,0.77,0.45,0.27
+BDL,Hartford CT,New England,residential,0.03,0.1,0.75,0.36,0.59
+BDR,Bridgeport CT,New England,commercial,0.09,0.02,0.77,0.45,0.27
+BDR,Bridgeport CT,New England,residential,0.03,0.1,0.75,0.36,0.59
 BFL,Bakersfield CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-PDX,Portland OR,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-SEA,Seattle WA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-GEI,Spokane WA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-NWI,Northwest Interior,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-NWC,Northwest Coast,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-NWV,Northwest Valley,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-NCC,Northern California Coast,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-NCV,Northern California Valley,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-SCC,Southern California Coast,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-SCI,Southern California Interior,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-SCV,Southern California Valley,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
-RMN,Rocky Mountains,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+BFL,Bakersfield CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+BNA,Nashville TN,East South Central,commercial,0.17,0.23,0.88,0.59,0.31
+BNA,Nashville TN,East South Central,residential,0.24,0.39,0.93,0.76,0.75
+BOS,Boston MA,New England,commercial,0.09,0.02,0.77,0.45,0.27
+BOS,Boston MA,New England,residential,0.03,0.1,0.75,0.36,0.59
+BTW,Burlington VT,New England,commercial,0.09,0.02,0.77,0.45,0.27
+BTW,Burlington VT,New England,residential,0.03,0.1,0.75,0.36,0.59
+BUF,Buffalo NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+BUF,Buffalo NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+BWI,Baltimore MD,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+BWI,Baltimore MD,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+CHS,Charleston SC,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+CHS,Charleston SC,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+CLE,Cleveland OH,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
+CLE,Cleveland OH,East North Central,residential,0.03,0.17,0.92,0.34,0.57
+CLT,Charlotte SC,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+CLT,Charlotte SC,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+CON,Concord NH,New England,commercial,0.09,0.02,0.77,0.45,0.27
+CON,Concord NH,New England,residential,0.03,0.1,0.75,0.36,0.59
+CRP,Corpus Christi TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+CRP,Corpus Christi TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+CRW,Charleston WV,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+CRW,Charleston WV,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+CYS,Cheyenne WY,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+CYS,Cheyenne WY,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+DEN,Denver CO,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+DEN,Denver CO,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+DFW,Dallas TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+DFW,Dallas TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+DLH,Duluth MN,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
+DLH,Duluth MN,West North Central,residential,0.04,0.18,0.92,0.4,0.75
+DTW,Detroit MI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
+DTW,Detroit MI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
 DWS,Desert Southwest,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+DWS,Desert Southwest,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+ECG,Elizabeth City NC,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+ECG,Elizabeth City NC,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+FAR,Fargo ND,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
+FAR,Fargo ND,West North Central,residential,0.04,0.18,0.92,0.4,0.75
+GAI,Montgomery AL,East South Central,commercial,0.17,0.23,0.88,0.59,0.31
+GAI,Montgomery AL,East South Central,residential,0.24,0.39,0.93,0.76,0.75
+GEI,Spokane WA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+GEI,Spokane WA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+GRB,Green Bay WI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
+GRB,Green Bay WI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
 HID,High Desert,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+HID,High Desert,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+IAH,Houston TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+IAH,Houston TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+JAX,Jacksonville FL,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+JAX,Jacksonville FL,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+LAX,Los Angeles CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+LAX,Los Angeles CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+LIT,Little Rock AK,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+LIT,Little Rock AK,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+MAF,Midland TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+MAF,Midland TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+MCI,Kansas City MO,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
+MCI,Kansas City MO,West North Central,residential,0.04,0.18,0.92,0.4,0.75
+MIA,Miami FL,South Atlantic,commercial,0.27,0.2,0.91,0.62,0.3
+MIA,Miami FL,South Atlantic,residential,0.24,0.32,0.95,0.72,0.78
+MKE,Milwaukee WI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
+MKE,Milwaukee WI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
+MSN,Madison WI,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
+MSN,Madison WI,East North Central,residential,0.03,0.17,0.92,0.34,0.57
+MSP,Minneapolis MN,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
+MSP,Minneapolis MN,West North Central,residential,0.04,0.18,0.92,0.4,0.75
+MSY,New Orleans LA,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+MSY,New Orleans LA,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+NCC,Northern California Coast,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+NCC,Northern California Coast,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+NCV,Northern California Valley,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+NCV,Northern California Valley,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+NWC,Northwest Coast,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+NWC,Northwest Coast,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+NWI,Northwest Interior,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+NWI,Northwest Interior,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+NWV,Northwest Valley,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+NWV,Northwest Valley,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+NYC,New York NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+NYC,New York NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+OKC,Oklahoma City OK,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+OKC,Oklahoma City OK,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+OMA,Omaha NE,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
+OMA,Omaha NE,West North Central,residential,0.04,0.18,0.92,0.4,0.75
+ONT,Ontario CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+ONT,Ontario CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+ORD,Chicago IL,East North Central,commercial,0.05,0.08,0.9,0.39,0.33
+ORD,Chicago IL,East North Central,residential,0.03,0.17,0.92,0.34,0.57
+ORH,Worcester MA,New England,commercial,0.09,0.02,0.77,0.45,0.27
+ORH,Worcester MA,New England,residential,0.03,0.1,0.75,0.36,0.59
+PBG,Plattsburg NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+PBG,Plattsburg NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+PDX,Portland OR,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+PDX,Portland OR,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+PHL,Philadelphia PA,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+PHL,Philadelphia PA,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+PHX,Phoenix AZ,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+PHX,Phoenix AZ,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+PIT,Philadelphia PA,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+PIT,Philadelphia PA,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+PSP,Palm Springs CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+PSP,Palm Springs CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+PVD,Providence RI,New England,commercial,0.09,0.02,0.77,0.45,0.27
+PVD,Providence RI,New England,residential,0.03,0.1,0.75,0.36,0.59
+PWM,Portland ME,New England,commercial,0.09,0.02,0.77,0.45,0.27
+PWM,Portland ME,New England,residential,0.03,0.1,0.75,0.36,0.59
+RMN,Rocky Mountains,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+RMN,Rocky Mountains,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+RST,Rochester NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+RST,Rochester NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+SAT,San Antonio TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+SAT,San Antonio TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+SCC,Southern California Coast,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+SCC,Southern California Coast,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+SCI,Southern California Interior,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+SCI,Southern California Interior,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+SCV,Southern California Valley,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+SCV,Southern California Valley,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+SDF,Louisville KY,East South Central,commercial,0.17,0.23,0.88,0.59,0.31
+SDF,Louisville KY,East South Central,residential,0.24,0.39,0.93,0.76,0.75
+SEA,Seattle WA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+SEA,Seattle WA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+SFO,San Francisco CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+SFO,San Francisco CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+SLC,Salt Lake City UT,Mountain,commercial,0.1,0.13,0.84,0.4,0.31
+SLC,Salt Lake City UT,Mountain,residential,0.08,0.19,0.78,0.31,0.67
+SMF,Sacremento CA,Pacific,commercial,0.15,0.21,0.88,0.51,0.22
+SMF,Sacremento CA,Pacific,residential,0.07,0.25,0.66,0.32,0.53
+SPS,Wichita Falls TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+SPS,Wichita Falls TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+STL,St Louis MO,West North Central,commercial,0.07,0.14,0.87,0.49,0.32
+STL,St Louis MO,West North Central,residential,0.04,0.18,0.92,0.4,0.75
+SYR,Syracuse NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+SYR,Syracuse NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+TYR,Tyler TX,West South Central,commercial,0.1,0.3,0.81,0.47,0.25
+TYR,Tyler TX,West South Central,residential,0.08,0.45,0.95,0.58,0.71
+UCA,Utica NY,Middle Atlantic,commercial,0.09,0.06,0.89,0.41,0.31
+UCA,Utica NY,Middle Atlantic,residential,0.03,0.11,0.88,0.31,0.43
+YFC,Fredericton NB,Canada,commercial,0,0.78,0,0,0
+YFC,Fredericton NB,Canada,residential,0,0.67,0,0,0
+YHZ,Halifax NS,Canada,commercial,0,0.34,0,0,0
+YHZ,Halifax NS,Canada,residential,0,0.33,0,0,0
+YOW,Ottawa ON,Canada,commercial,0,0.17,0,0,0
+YOW,Ottawa ON,Canada,residential,0,0.28,0,0,0
+YQB,Quebec City QC,Canada,commercial,0,0.62,0,0,0
+YQB,Quebec City QC,Canada,residential,0,0.77,0,0,0
+YQT,Thunder Bay ON,Canada,commercial,0,0.19,0,0,0
+YQT,Thunder Bay ON,Canada,residential,0,0.26,0,0,0
+YSB,Sudbury ON,Canada,commercial,0,0.12,0,0,0
+YSB,Sudbury ON,Canada,residential,0,0.15,0,0,0
+YUL,Montreal QC,Canada,commercial,0,0.62,0,0,0
+YUL,Montreal QC,Canada,residential,0,0.77,0,0,0
+YUY,Rouyn Noranda QC,Canada,commercial,0,0.62,0,0,0
+YUY,Rouyn Noranda QC,Canada,residential,0,0.77,0,0,0
+YYC,Calgary AB,Canada,commercial,0,0.08,0,0,0
+YYC,Calgary AB,Canada,residential,0,0.08,0,0,0
+YYZ,Toronto ON,Canada,commercial,0,0.12,0,0,0
+YYZ,Toronto ON,Canada,residential,0,0.15,0,0,0
+YZV,SeptIles QC,Canada,commercial,0,0.62,0,0,0
+YZV,SeptIles QC,Canada,residential,0,0.77,0,0,0
