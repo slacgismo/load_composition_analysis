@@ -1,7 +1,7 @@
 set -u
 set -e
 set -x
-pip install -r user_requirements.txt
+pip install -r requirements.txt
 cp $OPENFIDO_INPUT/user_config.csv $PWD
 python path.py
 python src/scripts/composite_loads.py
