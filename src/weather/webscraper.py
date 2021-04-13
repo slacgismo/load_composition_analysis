@@ -20,19 +20,19 @@ renames the csv files to make organization easy
 
 I have added some basic functionality to the function that should allow it to deal with common errors
 - sleep times after opening a new webpage (allows time for driver to load new html script - customize the sleep times)
-- Multiple click commands (for some reason my driver would not respond to single click commands, but would click the relevant buttons 
+- Multiple click commands (for some reason my driver would not respond to single click commands, but would click the relevant buttons
 when I used multiple click commands. I have commented out multiple click commands in the python script. You can use them if you face
 similar issues)
 - Retry - Sometimes the driver/wepbage throw up random errors. This is dealt with by running the script up to 3 times for each wban code.
 The script will move to the next wban code once it successfully makes a request or 3 tries are up. In the latter case, the function returns
 an error message and moves to the next wban code.
 
-Scraping HTML and Javascript tends to throw up random errors which I was unable to deal with in an efficient manner. I have added some 
+Scraping HTML and Javascript tends to throw up random errors which I was unable to deal with in an efficient manner. I have added some
 debugging tools to the file_requester function that help simplify dealing with the errors.
  - error list - returns a list of wban codes that couldn't be requested
- - string - sometimes the webpage doesn't process the email id properly, which leads to the script copying the term 'Climatological' from 
+ - string - sometimes the webpage doesn't process the email id properly, which leads to the script copying the term 'Climatological' from
  the order summary table instead of the order id. The function must be re run for wban codes that return the term 'Climatological'
- - date range - some wban codes can't be ordered as they don't have data in the sufficient date range. In this case, either manually 
+ - date range - some wban codes can't be ordered as they don't have data in the sufficient date range. In this case, either manually
  request the data within the limited date range, or find the wban code of the closest station and run the script on that wban code.
 '''
 '''
@@ -127,7 +127,7 @@ def file_requester(zipcodes_array, email_id):
 
 def file_downloader(orders, email_id):
     '''
-    Downloads data from the NOAA website once it becomes available. Takes as input a list of tuples containing WBAN code and a respective 
+    Downloads data from the NOAA website once it becomes available. Takes as input a list of tuples containing WBAN code and a respective
     order id (same format as output of file_requester) and the email id with which the order was made.
     '''
     for i in orders:
@@ -137,10 +137,10 @@ def file_downloader(orders, email_id):
         driver.get(config_default.noaa_order + order_id + ".csv")# Downloads csv file
         #time.sleep(45) #Sleep time to allow file to download in case webdrconfig_default.idiver force closes window. Uncomment if required.
 
-def file_renamer(orders, wban_list, location_abbrev, file_suffix)
+def file_renamer(orders, wban_list, location_abbrev, file_suffix):
 '''
-Renames downloaded csv files. Takes as input the aforementioned order list, a list of wban_codes, a list of location codes and a file suffix. 
-Ensure that wban_list and location_abbrev are sorted the same way. Ideally these will be extracted from the same dataset, so the sort 
+Renames downloaded csv files. Takes as input the aforementioned order list, a list of wban_codes, a list of location codes and a file suffix.
+Ensure that wban_list and location_abbrev are sorted the same way. Ideally these will be extracted from the same dataset, so the sort
 should already be the same. The file suffix corresponds to the date range (199,200 or 201).
 '''
     for i in orders:
