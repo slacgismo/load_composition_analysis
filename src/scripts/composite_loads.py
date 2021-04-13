@@ -541,7 +541,8 @@ if __name__ == "__main__":
     #seasons = config_dict['Season']
     #ftype = config_dict['Feeder']
     #debug = config_dict['Intermediate Results']
-    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('user_config.csv')))
+    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('config.csv')), header = None)
+    config_settings = config_settings.rename(columns = {0: "Category", 1: "Values"})
     cities = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
     seasons = np.array(config_settings[config_settings["Category"] == 'Season' ]['Values'])[0].split()
     ftype = np.array(config_settings[config_settings["Category"] == 'Feeder' ]['Values'])[0].split()
