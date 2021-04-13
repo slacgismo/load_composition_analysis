@@ -541,16 +541,16 @@ if __name__ == "__main__":
     #seasons = config_dict['Season']
     #ftype = config_dict['Feeder']
     #debug = config_dict['Intermediate Results']
-    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('config.csv')), header = None)
+    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('config.csv')), header = None).fillna('')
     config_settings = config_settings.rename(columns = {0: "Category", 1: "Values"})
     cities = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
     seasons = np.array(config_settings[config_settings["Category"] == 'Season' ]['Values'])[0].split()
     ftype = np.array(config_settings[config_settings["Category"] == 'Feeder' ]['Values'])[0].split()
     debug = np.array(config_settings[config_settings["Category"] == 'Intermediate Results' ]['Values'])[0].split()
-    if len(seasons) == 0:
-        seasons = ['Summer', 'Winter', 'Spring']
-    if len(ftype) == 0:
-        ftype = ['residential', 'commercial', 'mixed', 'rural']
+    #if len(seasons) == 0:
+    #    seasons = ['Summer', 'Winter', 'Spring']
+    #if len(ftype) == 0:
+    #    ftype = ['residential', 'commercial', 'mixed', 'rural']
     open(path_adder(path,"file_loc.txt"), "w").close()
     open(path_adder(path, "debug_loc.txt"), "w").close()
     with open(path_adder(path, 'data/ceus_sens.pickle'), 'rb') as file:
@@ -578,6 +578,10 @@ if __name__ == "__main__":
             plt.close()
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
+        if len(ftype) == 0:
+            print('You have not selected a feeder type. Please input one or more of the following options: Residential, Commercial, Mixed, Rural')
+        if len(seasons) == 0:
+            print('You have not selected a season. Please input one or more of the following options: Summer, Spring, Winter')
         for feeder in ftype:
             feeder = feeder.lower()
             if 'loadshape' in debug:
