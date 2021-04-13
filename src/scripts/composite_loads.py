@@ -527,20 +527,25 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 if __name__ == "__main__":
     with open('path.txt', 'r') as f:
         path = pathlib.Path(f.read())
-    config_dict = {}
-    with open(os.path.join(path, pathlib.Path('user_config.csv')), 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        for row in csv_reader:
-            row_new = []
-            for r in row:
-                if r != "":
-                    row_new.append(r)
-                    config_dict[row_new[0]] = row_new[1:]
+    #config_dict = {}
+    #with open(os.path.join(path, pathlib.Path('user_config.csv')), 'r') as read_obj:
+    #    csv_reader = reader(read_obj)
+    #    for row in csv_reader:
+    #        row_new = []
+    #        for r in row:
+    #            if r != "":
+    #                row_new.append(r)
+    #                config_dict[row_new[0]] = row_new[1:]
     #config_df = pd.read_csv('user_config.csv').fillna(0)
-    cities = config_dict['City']
-    seasons = config_dict['Season']
-    ftype = config_dict['Feeder']
-    debug = config_dict['Intermediate Results']
+    #cities = config_dict['City']
+    #seasons = config_dict['Season']
+    #ftype = config_dict['Feeder']
+    #debug = config_dict['Intermediate Results']
+    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('user_config.csv')))
+    cities = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
+    seasons = np.array(config_settings[config_settings["Category"] == 'Season' ]['Values'])[0].split()
+    ftype = np.array(config_settings[config_settings["Category"] == 'Feeder' ]['Values'])[0].split()
+    debug = np.array(config_settings[config_settings["Category"] == 'Intermediate Results' ]['Values'])[0].split()
     if len(seasons) == 0:
         seasons = ['Summer', 'Winter', 'Spring']
     if len(ftype) == 0:
