@@ -30,7 +30,6 @@ jobs:
         run: |
           export OPENFIDO_INPUT=autotest
           export OPENFIDO_OUTPUT=autotest
-          mkdir autotest
           source openfido.sh
           
       - name: Produce artifacts
