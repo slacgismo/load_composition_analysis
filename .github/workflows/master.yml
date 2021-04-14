@@ -31,7 +31,7 @@ jobs:
           export OPENFIDO_INPUT=autotest
           export OPENFIDO_OUTPUT=autotest
           mkdir autotest
-          sh -c openfido.sh
+          source openfido.sh
           
       - name: Produce artifacts
         uses: actions/upload-artifact@v2
