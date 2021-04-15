@@ -1,6 +1,6 @@
 Note: The Load Composition Analysis tools are currently under development.
 
-The load composition analysis tool is designed to be used with OpenFIDO.  To install OpenFIDO see https://help.openfido.org/.  
+The load composition analysis tool is designed to be used with OpenFIDO.  To install OpenFIDO see http://help.openfido.org/.  
 
 ## Getting Started
 
