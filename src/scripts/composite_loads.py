@@ -525,14 +525,8 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    
-    path = os.path.abspath(os.getcwd())
-
-=======
     with open('path.txt', 'r') as f:
         path = pathlib.Path(f.read())
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
     #config_dict = {}
     #with open(os.path.join(path, pathlib.Path('user_config.csv')), 'r') as read_obj:
     #    csv_reader = reader(read_obj)
@@ -547,27 +541,15 @@ if __name__ == "__main__":
     #seasons = config_dict['Season']
     #ftype = config_dict['Feeder']
     #debug = config_dict['Intermediate Results']
-<<<<<<< HEAD
-    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('config.csv')), header = None).fillna('')
-    config_settings = config_settings.rename(columns = {0: "Category", 1: "Values"})
-=======
     config_settings = pd.read_csv(os.path.join(path, pathlib.Path('user_config.csv')))
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
     cities = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
     seasons = np.array(config_settings[config_settings["Category"] == 'Season' ]['Values'])[0].split()
     ftype = np.array(config_settings[config_settings["Category"] == 'Feeder' ]['Values'])[0].split()
     debug = np.array(config_settings[config_settings["Category"] == 'Intermediate Results' ]['Values'])[0].split()
-<<<<<<< HEAD
-    #if len(seasons) == 0:
-    #    seasons = ['Summer', 'Winter', 'Spring']
-    #if len(ftype) == 0:
-    #    ftype = ['residential', 'commercial', 'mixed', 'rural']
-=======
     if len(seasons) == 0:
         seasons = ['Summer', 'Winter', 'Spring']
     if len(ftype) == 0:
         ftype = ['residential', 'commercial', 'mixed', 'rural']
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
     open(path_adder(path,"file_loc.txt"), "w").close()
     open(path_adder(path, "debug_loc.txt"), "w").close()
     with open(path_adder(path, 'data/ceus_sens.pickle'), 'rb') as file:
@@ -595,13 +577,6 @@ if __name__ == "__main__":
             plt.close()
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
-<<<<<<< HEAD
-        if len(ftype) == 0:
-            print('You have not selected a feeder type. Please input one or more of the following options: Residential, Commercial, Mixed, Rural')
-        if len(seasons) == 0:
-            print('You have not selected a season. Please input one or more of the following options: Summer, Spring, Winter')
-=======
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
         for feeder in ftype:
             feeder = feeder.lower()
             if 'loadshape' in debug:
