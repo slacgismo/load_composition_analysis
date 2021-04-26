@@ -8,20 +8,12 @@ import sensitivity_new as sn
 import setup_config
 import user_config
 import pickle
-<<<<<<< HEAD
-
-
-=======
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
 class config:
     eu_dict_ceus = dict(zip(
 ["heat_pump", "other_electric_heat", "cooling", "water_heating", "cooking"],
 ["Vent", "Heat", "Cool", "HotWater", "Cook"],
 ))
-<<<<<<< HEAD
-=======
 
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
     enduse_dict = dict(zip(
 ["Heat", "Cool", "Vent", "HotWater", "Cook", "Refrig",
 "ExtLight", "IntLight", "OffEquip", "Misc", "Process", "Motors", "AirComp"],
@@ -199,7 +191,3 @@ if __name__ == "__main__":
     with open('rbsa_sens.pickle', 'wb') as file:
         pickle.dump(rbsa_sens, file)
     print((datetime.datetime.now() - start).total_seconds())
-<<<<<<< HEAD
-=======
-    
->>>>>>> dc834c640f4f9cef874a90c3b1b73e3245535241
