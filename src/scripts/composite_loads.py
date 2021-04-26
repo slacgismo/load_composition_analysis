@@ -525,8 +525,9 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     return [season_dict, com_load_dict]#, tot_eu_ceus, tot_eu_rbsa]
 
 if __name__ == "__main__":
-    with open('path.txt', 'r') as f:
-        path = pathlib.Path(f.read())
+    
+    path = os.path.abspath(os.getcwd())
+
     #config_dict = {}
     #with open(os.path.join(path, pathlib.Path('user_config.csv')), 'r') as read_obj:
     #    csv_reader = reader(read_obj)

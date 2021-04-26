@@ -8,12 +8,13 @@ import sensitivity_new as sn
 import setup_config
 import user_config
 import pickle
+
+
 class config:
     eu_dict_ceus = dict(zip(
 ["heat_pump", "other_electric_heat", "cooling", "water_heating", "cooking"],
 ["Vent", "Heat", "Cool", "HotWater", "Cook"],
 ))
-
     enduse_dict = dict(zip(
 ["Heat", "Cool", "Vent", "HotWater", "Cook", "Refrig",
 "ExtLight", "IntLight", "OffEquip", "Misc", "Process", "Motors", "AirComp"],
@@ -191,4 +192,3 @@ if __name__ == "__main__":
     with open('rbsa_sens.pickle', 'wb') as file:
         pickle.dump(rbsa_sens, file)
     print((datetime.datetime.now() - start).total_seconds())
-    
