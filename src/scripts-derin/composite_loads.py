@@ -524,7 +524,7 @@ if __name__ == "__main__":
 
     path = os.path.abspath(os.getcwd())
 
-    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('config.csv')), header = None).fillna('')
+    config_settings = pd.read_csv(os.path.join(path, pathlib.Path('autotest/config-test.csv')), header = None).fillna('')
     config_settings = config_settings.rename(columns = {0: "Category", 1: "Values"})
     cities = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
     seasons = np.array(config_settings[config_settings["Category"] == 'Season' ]['Values'])[0].split()
