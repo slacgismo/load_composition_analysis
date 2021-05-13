@@ -1,10 +1,10 @@
 set -u
 set -e
 set -x
-pip install -r requirements.txt
+python3 -m pip -q install -r requirements.txt
 cp $OPENFIDO_INPUT/config.csv $PWD
-python path.py
-python src/scripts/composite_loads.py
+python3 path.py
+python3 src/scripts/composite_loads.py
 len_file=$(wc -l < file_loc.txt)
 len_debug=$(wc -l < debug_loc.txt)
 for i in $(seq 1 $len_file)
