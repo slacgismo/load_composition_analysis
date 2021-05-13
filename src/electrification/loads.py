@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 
 def find_csvfile(name):
-    return str(sys.modules[__name__].__file__).replace(f"/loads.py",f"/{name}.csv")
+    return str(sys.modules[__name__].__file__).replace(f"/loads.py",f"../../data/electrification/{name}.csv")
 
 
 electrification_index = ["location"]
@@ -37,4 +37,3 @@ def load_electrification (
     for key,value in select.items():
         data = data[data[key]==value]
     return convert(data.set_index(index)[columns])
-
