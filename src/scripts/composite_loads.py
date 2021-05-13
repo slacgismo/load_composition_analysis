@@ -12,6 +12,7 @@ import pickle
 import requests
 from csv import reader
 class config:
+    #dictionaries that are used by the script
     eu_dict_ceus = dict(zip(
 ["heat_pump", "other_electric_heat", "cooling", "water_heating", "cooking"],
 ["Vent", "Heat", "Cool", "HotWater", "Cook"],
@@ -102,6 +103,7 @@ electrification_index = ["location"]
 electrification_data = ["heat_pump","other_electric_heat","cooling","water_heating","cooking"]
 electrification_attributes = ["city","region","building_type"]
 def load_electrification (
+#obtains electrification data for all cities from a csv file
         select={},
         index="location",
         columns=["city","region","building_type","heat_pump",
@@ -135,7 +137,11 @@ def inverse_mapping(f):
     return f.__class__(map(reversed, f.items()))
 
 def weather_season(location, day, aws, showplots = False):
-
+    #takes in the name of a city and a day type (weekday or weekend), and returns three weather profiles
+    #for the city (summer, spring, and winter). The winter weather profile is obtained by finding the 10th percentile
+    #of daily max values and averaging over all days wiht that daily max to obtain a generic 24 hour weather profile for a
+    #typical winter day. A summer day is the same but iwht 90th percentile daily max. Spring days are just averages of days
+    #in the April-June range.
     if day == "weekday":
         weekday = 1
     elif day == "weekend":
@@ -145,7 +151,7 @@ def weather_season(location, day, aws, showplots = False):
     summer_months = [6,7,8,9]
     winter_months = [11,12,1,2]
     if aws == True:
-        #print('aws')
+        #pulls data from s3 bucket
         url = setup_config.aws_link %(location)
         r = requests.get(url, allow_redirects=True)
         open(path_adder(path, f'{location}.csv'), 'wb').write(r.content)
@@ -153,6 +159,7 @@ def weather_season(location, day, aws, showplots = False):
 
     else:
         try:
+            #if unable to pull data, checks if it is locally stored
             loc = pd.read_csv(path_adder(path, setup_config.noaa_folder %(location)), converters = {"localtime": noaa_datetime})
         except:
             os.system('python aws_pull.py')
@@ -227,6 +234,8 @@ def weather_season(location, day, aws, showplots = False):
     return [low_day_temp, spring_temp, high_day_temp]
 
 def loadshape(location, sensitivities, day, weather, btype, path = None, showplots = False):
+    #takes in the weather profile for a city and using the sensitivity data, finds 24 hour load profiles for each enduse in
+    #each building type.
     low_day_temp = weather[0]
     spring_temp = weather[1]
     high_day_temp = weather[2]
@@ -295,6 +304,9 @@ def loadshape(location, sensitivities, day, weather, btype, path = None, showplo
 
 
 def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrification, path, debug = False, showplots = False):
+    #Using the previously defined functions, this function aggregates load profiles and weights them by square footage and number
+    #of buildings in the city to obtain a composite 24 hour load model, where the components are the 7 NERC components
+    #(Motor A-D, Power Electronics, Constant Current, Constant Impedance).
     regional_electrification = {}
     for i in set(electrification["region"]):
         x = {}
@@ -351,7 +363,9 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         summer = []
         if showplots:
             print(btype)
-        loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, showplots = showplots)
+            loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, path = path, showplots = showplots)
+        else:
+            loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, path = path, showplots = False)
         try:
             area, bcount = feeder_comp[(feeder_comp['feeder_type'] == feeder) & (feeder_comp['building_type'] == inverse_mapping(build_map)[btype])].iloc[0][3:]
         except:
@@ -429,7 +443,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         spring = []
         summer = []
 
-        loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, showplots = showplots)
+        loads = loadshape(location, sensitivities, 'weekday', weather, btype = btype, path = path, showplots = showplots)
         try:
             area, bcount = feeder_comp[(feeder_comp['feeder_type'] == feeder) & (feeder_comp['building_type'] == inverse_mapping(build_map)[btype])].iloc[0][3:]
         except:
@@ -506,6 +520,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         #plt.figure(figsize = (18,6))
         fig, ax = plt.subplots(1,2, figsize = (18,6))
         #plt.show()
+        #creating stackplot to display results for each season
         ax[0].stackplot(np.arange(24),season_dict[season]/sum(season_dict[season]), labels=labels)
         ax[0].legend(loc='upper left')
         ax[0].set_title('Normalized Hourly composite %s enduse load for %s' %(feeder, location))
