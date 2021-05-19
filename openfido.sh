@@ -8,6 +8,7 @@ set -e
 set -x
 
 python3 -m pip -q install -r requirements.txt
+echo "test"
 echo $(awk NR==$i file_loc.txt)
 # cp $OPENFIDO_INPUT/config.csv $PWD
 # python3 src/scripts-derin/composite_loads.py
