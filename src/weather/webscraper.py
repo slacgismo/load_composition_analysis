@@ -123,7 +123,7 @@ def file_requester(zipcodes_array, email_id):
                 driver.quit()
                 continue
 
-    return order_list#, zipcode_list, error_list, string
+    return order_list #, zipcode_list, error_list, string
 
 def file_downloader(orders, email_id):
     '''
