@@ -30,7 +30,7 @@ def to_float(x):
         return float(x.rstrip('s'))
     except:
         return float("nan")
-locations = pd.read_csv(find_csvfile("locations.csv"),converters={
+locations = pd.read_csv(find_csvfile("../../data/locations.csv"),converters={
         "location":str,
         "airport":str,
         "source":str,
@@ -94,13 +94,13 @@ def set_tzinfo(timezone):
 def download_all():
     for key, value in station_list.items():
         saveas = f"enrc/{key}.csv"
-        if os.path.exists(saveas): 
+        if os.path.exists(saveas):
             data = pd.read_csv(saveas,
                 converters = {
                     "localtime": datetime.fromisoformat,
                     "temperature": float,
                     "humidity": float,
-                }, 
+                },
                 index_col = 0)
         else:
             set_tzinfo(timezones[key])
@@ -184,7 +184,7 @@ def extract_daily_minmax(location,
 def get_minmax_data():
     minmax_csv = find_csvfile("enrc/minmax.csv")
     if not os.path.exists(minmax_csv):
-        df = [] 
+        df = []
         for location in station_list.keys():
             row = extract_daily_minmax(location)
             row["location"] = location

@@ -15,10 +15,10 @@ Load modeling:
     Tdiff   Difference between the heating and cooling balance temperatures
             (default 10 degF)
 
-    Tbase   Base temperature for the heating and cooling balance temperature 
+    Tbase   Base temperature for the heating and cooling balance temperature
             (default is 60 degF)
 
-    Days    Weekdays to include in developing the load model 
+    Days    Weekdays to include in developing the load model
             (default is Monday through Friday, i.e., [0,1,2,3,4])
 
 Row filtering:
@@ -106,7 +106,7 @@ def load_data(ifile,
     Load data from CSV file
 
     Parameters:
-    
+
         ifile (str)                  input file name
 
         datetime_col (datetime)      datetime column number (default 0)
@@ -114,13 +114,13 @@ def load_data(ifile,
         power_col (int)              power column number (default 1)
 
         temperature_col (int)        temperature column number (default 2)
-        
+
         humidity (int)               humidity column number (default None)
-        
+
         skiprows (int)               rows skipped when reading (default 1)
-        
+
         filter (bool or callable)    filter enable/function (default True)
-        
+
         dropna (bool, str, or list)  dropna flag, 'any','all', or list of
                                      column names in which na is found
 
@@ -128,10 +128,10 @@ def load_data(ifile,
 
         DataFrame - contains loaded data
 
-    The data loader imports the specified CSV file, using the optional column 
+    The data loader imports the specified CSV file, using the optional column
     specifications and filter, and returns the result as a DataFrame.
     """
-    data = pd.read_csv(ifile, 
+    data = pd.read_csv(ifile,
             low_memory=False,
             header=None,
             skiprows=skiprows,
@@ -161,11 +161,11 @@ def get_days(data,days=config.Days):
     Parameters:
 
         data (DataFrame)    data set
-    
+
         days (list)         weekdays to include in data
 
     Returns:
-    
+
         DataFrame           data that includes specified weekdays
     """
     return data[data.index.dayofweek.isin(days)]
@@ -175,13 +175,13 @@ def get_hours(data,hours):
     Get the data for the desired hours
 
     Parameters:
-    
+
         data (DataFrame)    data set
-    
+
         hours (list)        hours to include in data
 
     Returns:
-    
+
         DataFrame            data that includes specified hours
     """
     return data[data.index.hour.isin(hours)]
@@ -217,9 +217,9 @@ def get_baseload(data,
     Returns:
 
         load (float)        Base load value at Tbase
-        
+
         slope (float)        Slope of the base at Tbase
-        
+
         Tbase (float)        Base temperature that minimizes abs(slope) in degF
 
         base (DataFrame)    The base load data used to find Tbase
@@ -254,7 +254,7 @@ def get_sensitivity(heating,cooling,power_name,temperature_name):
 
     Parameters:
 
-        heating (DataFrame)        data set for heating 
+        heating (DataFrame)        data set for heating
 
         cooling (DataFrame)        data set for cooling
 
@@ -271,7 +271,7 @@ def get_sensitivity(heating,cooling,power_name,temperature_name):
     Performs a linear regression on the data set to determine the slope
     of the power w.r.t temperature.
     """
-    
+
     if not heating.empty:
         T = np.array(heating[temperature_name])
         P = np.array(heating[power_name])
@@ -420,9 +420,9 @@ def get_model_0(data, datetime_col, power_col, temperature_col,
     power_name = column_list[power_col]
     temperature_name = column_list[temperature_col]
     days = get_days(data=data,days=config.Days)
-    model = {"Hour":[], 
-        "Pbase":[], "Pheat":[], "Pcool":[], 
-        "Tmin":[], "Theat":[], "Tcool":[], "Tmax":[], 
+    model = {"Hour":[],
+        "Pbase":[], "Pheat":[], "Pcool":[],
+        "Tmin":[], "Theat":[], "Tcool":[], "Tmax":[],
         "Sbase":[], "Sheat":[], "Scool":[]}
 
     for h in range(0,24):
@@ -531,9 +531,9 @@ def get_model_0(data, datetime_col, power_col, temperature_col,
 
     return model
 class Model:
-    
+
     def __init__(self,x,y,n):
-    
+
         self.model = pwlf.PiecewiseLinFit(x,y)
         self.data = (x,y)
         self.n = n
@@ -541,7 +541,7 @@ class Model:
         self.y = Y = self.model.predict(X)
         self.s = S = (Y[1:]-Y[0:-1]) / (X[1:]-X[0:-1])
         self.i = (Y[1:]+Y[0:-1] -S*(X[1:]+X[0:-1])) / 2
-    
+
     def __str__(self):
         result = f"{repr(self)}\n    n = {self.n}\n"
         result += f"    x = {self.x}\n"
@@ -549,13 +549,13 @@ class Model:
         result += f"    s = {self.s}\n"
         result += f"    i = {self.i}\n"
         return result
-    
+
     def to_dict(self):
         return {"x": self.x, "y": self.y, "s" : self.s, "i" : self.i}
-    
+
     def get_data(self):
         return model.data
-    
+
     def predict(self,x):
         return self.model.predict(x)
 
@@ -563,7 +563,7 @@ def get_model_1(data, datetime_col, power_col, temperature_col,
         skiprows=config.SkipRows,
         ofile=None,
         saveplots=config.SavePlots):
-    
+
     Pbase = []
     Pheat = []
     Pcool = []
@@ -578,7 +578,7 @@ def get_model_1(data, datetime_col, power_col, temperature_col,
     if saveplots:
         fig = plt.figure(figsize=(24,24))
         ax = fig.subplots(8,3).flatten()
-        
+
     xmin = data["temperature"].min()
     xmax = data["temperature"].max()
     ymin = data["power"].min()
@@ -590,9 +590,9 @@ def get_model_1(data, datetime_col, power_col, temperature_col,
 
         T = hour[h]["temperature"]
         P = np.array(hour[h]["power"])
-        
+
         model.append(Model(T,P,3))
-        
+
         if model[h].s[0] >= model[h].s[1] and model[h].s[1] >= model[h].s[2]: # both slopes are too small
 
             model[h] = Model(T,P,1) # reduce model to simple linear regression
@@ -609,7 +609,7 @@ def get_model_1(data, datetime_col, power_col, temperature_col,
             Scool.append(np.nan)
 
         elif model[h].s[0] >= model[h].s[1] : # only heating slope is too small
-            
+
             model[h] = Model(T,P,2) # remove heating segment
 
             Pbase.append((model[h].y[0]+model[h].y[1])/2)
@@ -639,7 +639,7 @@ def get_model_1(data, datetime_col, power_col, temperature_col,
             Scool.append(np.nan)
 
         else: # both slopes are ok
-            
+
             Pbase.append((model[h].y[1]+model[h].y[2])/2)
             Pheat.append(model[h].y[0])
             Pcool.append(model[h].y[-1])
@@ -658,7 +658,7 @@ def get_model_1(data, datetime_col, power_col, temperature_col,
             ax[h].set_ylim([ymin,ymax])
             ax[h].set_title(f"Hour {h}")
             ax[h].grid()
-        
+
     return pd.DataFrame({"Pbase": Pbase, "Pheat": Pheat, "Pcool": Pcool,
                          "Tmin":  Tmin,  "Theat": Theat, "Tcool": Tcool, "Tmax": Tmax,
                          "Sbase": Sbase, "Sheat": Sheat, "Scool": Scool})
@@ -670,33 +670,33 @@ def selftest():
     The selftest uses the file 'testdata.csv' and prints the following output.
 
          Pbase   Pheat   Pcool   Tmin  Theat  Tcool  Tmax  Sbase  Sheat  Scool
-    Hour                                                                       
-    0    1,779.5 2,667.5 2,560.3 22.9  51.2   61.2   79.8  1.6    -31.4  41.9  
-    1    1,704.0 2,616.7 2,246.5 22.6  50.7   60.7   75.5  2.3    -32.4  36.9  
-    2    1,664.1 2,610.3 2,168.5 22.2  50.7   60.7   76.5  2.8    -33.2  31.8  
-    3    1,657.0 2,669.1 2,106.7 21.4  50.8   60.8   76.2  2.5    -34.5  29.1  
-    4    1,707.4 2,791.8 2,040.0 20.9  50.8   60.8   73.1  2.6    -36.2  27.1  
-    5    1,860.0 3,009.3 2,063.1 20.8  51.3   61.3   71.3  2.5    -37.7  20.4  
-    6    2,101.4 3,350.6 2,281.9 21.2  53.0   63.0   73.6  1.2    -39.3  17.0  
-    7    2,275.2 3,561.2 2,557.6 20.8  54.2   64.2   81.2  0.3    -38.5  16.6  
-    8    2,344.9 3,571.4 2,869.2 20.6  53.8   63.8   83.8  0.7    -37.0  26.2  
-    9    2,383.7 3,549.3 3,064.3 22.5  54.4   64.4   85.9  0.1    -36.5  31.7  
-    10   2,412.6 3,461.4 3,262.9 25.4  55.2   65.2   88.2  -0.1   -35.1  36.9  
-    11   2,419.4 3,401.7 3,377.8 26.5  56.0   66.0   91.6  -0.4   -33.3  37.4  
-    12   2,414.3 3,370.5 3,519.3 27.1  57.0   67.0   94.5  -1.6   -32.0  40.3  
-    13   2,405.8 3,379.1 3,690.4 26.1  57.5   67.5   98.4  -1.9   -31.0  41.5  
-    14   2,378.1 3,374.5 4,011.7 25.2  57.8   67.8   105.8 -2.5   -30.6  43.0  
-    15   2,361.1 3,385.2 4,132.7 24.7  58.2   68.2   106.9 -3.9   -30.6  45.8  
-    16   2,364.4 3,530.7 4,215.5 24.0  59.1   69.1   107.0 -5.5   -33.2  48.9  
-    17   2,387.6 3,746.0 4,232.6 23.6  59.8   69.8   106.6 -6.4   -37.6  50.2  
-    18   2,403.1 3,706.4 4,157.1 23.7  59.7   69.7   105.1 -4.0   -36.1  49.6  
-    19   2,427.6 3,607.4 4,003.6 23.2  57.2   67.2   101.6 -1.3   -34.7  45.7  
-    20   2,413.3 3,507.8 3,874.4 22.7  56.2   66.2   97.9  -0.8   -32.7  46.1  
-    21   2,314.8 3,327.8 3,634.9 22.2  54.5   64.5   91.5  0.3    -31.4  48.9  
-    22   2,129.6 3,086.1 3,269.4 22.2  52.9   62.9   86.8  0.5    -31.2  47.6  
-    23   1,934.0 2,853.5 3,009.2 22.2  52.0   62.0   85.3  1.3    -30.9  46.1  
+    Hour
+    0    1,779.5 2,667.5 2,560.3 22.9  51.2   61.2   79.8  1.6    -31.4  41.9
+    1    1,704.0 2,616.7 2,246.5 22.6  50.7   60.7   75.5  2.3    -32.4  36.9
+    2    1,664.1 2,610.3 2,168.5 22.2  50.7   60.7   76.5  2.8    -33.2  31.8
+    3    1,657.0 2,669.1 2,106.7 21.4  50.8   60.8   76.2  2.5    -34.5  29.1
+    4    1,707.4 2,791.8 2,040.0 20.9  50.8   60.8   73.1  2.6    -36.2  27.1
+    5    1,860.0 3,009.3 2,063.1 20.8  51.3   61.3   71.3  2.5    -37.7  20.4
+    6    2,101.4 3,350.6 2,281.9 21.2  53.0   63.0   73.6  1.2    -39.3  17.0
+    7    2,275.2 3,561.2 2,557.6 20.8  54.2   64.2   81.2  0.3    -38.5  16.6
+    8    2,344.9 3,571.4 2,869.2 20.6  53.8   63.8   83.8  0.7    -37.0  26.2
+    9    2,383.7 3,549.3 3,064.3 22.5  54.4   64.4   85.9  0.1    -36.5  31.7
+    10   2,412.6 3,461.4 3,262.9 25.4  55.2   65.2   88.2  -0.1   -35.1  36.9
+    11   2,419.4 3,401.7 3,377.8 26.5  56.0   66.0   91.6  -0.4   -33.3  37.4
+    12   2,414.3 3,370.5 3,519.3 27.1  57.0   67.0   94.5  -1.6   -32.0  40.3
+    13   2,405.8 3,379.1 3,690.4 26.1  57.5   67.5   98.4  -1.9   -31.0  41.5
+    14   2,378.1 3,374.5 4,011.7 25.2  57.8   67.8   105.8 -2.5   -30.6  43.0
+    15   2,361.1 3,385.2 4,132.7 24.7  58.2   68.2   106.9 -3.9   -30.6  45.8
+    16   2,364.4 3,530.7 4,215.5 24.0  59.1   69.1   107.0 -5.5   -33.2  48.9
+    17   2,387.6 3,746.0 4,232.6 23.6  59.8   69.8   106.6 -6.4   -37.6  50.2
+    18   2,403.1 3,706.4 4,157.1 23.7  59.7   69.7   105.1 -4.0   -36.1  49.6
+    19   2,427.6 3,607.4 4,003.6 23.2  57.2   67.2   101.6 -1.3   -34.7  45.7
+    20   2,413.3 3,507.8 3,874.4 22.7  56.2   66.2   97.9  -0.8   -32.7  46.1
+    21   2,314.8 3,327.8 3,634.9 22.2  54.5   64.5   91.5  0.3    -31.4  48.9
+    22   2,129.6 3,086.1 3,269.4 22.2  52.9   62.9   86.8  0.5    -31.2  47.6
+    23   1,934.0 2,853.5 3,009.2 22.2  52.0   62.0   85.3  1.3    -30.9  46.1
     """
-    data = load_data(ifile='testdata.csv')
+    data = load_data(ifile='../../data/testdata.csv')
     model = get_model(data,datetime_col=0,power_col=1,temperature_col=2,saveplots=True)
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)

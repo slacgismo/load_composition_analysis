@@ -193,7 +193,7 @@ def to_dict(d):
     except:
         return {}
 
-locations = pd.read_csv(find_csvfile("locations.csv"),converters={
+locations = pd.read_csv(find_csvfile("../../data/locations.csv"),converters={
         "location":str,
         "airport":str,
         "source":str,
@@ -231,7 +231,7 @@ timezones = locations[locations["source"]=="NOAA"]["timezone"].to_dict()
 def get_minmax_data(warn=False):
     minmax_csv = find_csvfile("noaa/minmax.csv")
     if not os.path.exists(minmax_csv):
-        df = [] 
+        df = []
         for location in station_list.keys():
             try:
                 row = extract_daily_minmax(location)
