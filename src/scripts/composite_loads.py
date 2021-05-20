@@ -287,7 +287,7 @@ def loadshape(location, sensitivities, day, weather, btype, path = None, showplo
         #plt.legend(t.keys())
         if showplots:
             #plt.show()
-            plt.savefig(path_adder(path, f'{location}/Loadshape_{location}_{btype}_{col}_{day}.png'))
+            plt.savefig(path_adder(path, f'{location}/{location}_loadshape_{btype}_{col}_{day}.png'))
             plt.close()
         load_dict[col] = np.array([p,q,r])
 
