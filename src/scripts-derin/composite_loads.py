@@ -95,7 +95,7 @@ def read_files():
     return siteid_df_dict
 
 def find_csvfile(name):
-    return str(sys.modules[__name__].__file__).replace(f"/loads.py",f"/cities/{name}.csv")
+    return str(sys.modules[__name__].__file__).replace(f"/loads.py",f"/outputs/{name}.csv")
 
 def path_adder(path, file):
     return os.path.join(path, pathlib.Path(file))
@@ -150,8 +150,8 @@ def weather_season(location, day, aws, showplots = False):
         #print('aws')
         url = setup_config.aws_link %(location)
         r = requests.get(url, allow_redirects=True)
-        open(path_adder(path, f'cities/{location}.csv'), 'wb').write(r.content)
-        loc = pd.read_csv(f'cities/{location}.csv', converters = {"localtime": noaa_datetime})
+        open(path_adder(path, f'outputs/{location}.csv'), 'wb').write(r.content)
+        loc = pd.read_csv(f'outputs/{location}.csv', converters = {"localtime": noaa_datetime})
 
     else:
         try:
@@ -287,7 +287,7 @@ def loadshape(location, sensitivities, day, weather, btype, path = None, showplo
         #plt.legend(t.keys())
         if showplots:
             #plt.show()
-            plt.savefig(path_adder(path, f'cities/{location}/Loadshape_{location}_{btype}_{col}_{day}.png'))
+            plt.savefig(path_adder(path, f'outputs/{location}/Loadshape_{location}_{btype}_{col}_{day}.png'))
             plt.close()
         load_dict[col] = np.array([p,q,r])
 
@@ -327,8 +327,8 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
     com_load_dict = {}
     for btype in sens[0].keys():
 
-        if not os.path.exists(path_adder(path,f'cities/{location}')):
-            os.mkdir(path_adder(path,f'cities/{location}'))
+        if not os.path.exists(path_adder(path,f'outputs/{location}')):
+            os.mkdir(path_adder(path,f'outputs/{location}'))
 
         tot_eu_ceus = {}
         tot_eu_rbsa = {}
@@ -479,10 +479,10 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
 
     season_dict = {'winter': winter_build_load, 'spring': spring_build_load, 'summer': summer_build_load}
     for season in ['winter', 'spring', 'summer']:
-        if not os.path.exists(path_adder(path,'cities/%s/%s' %(location, season))):
-            os.mkdir(path_adder(path,'cities/%s/%s' %(location, season)))
-        if not os.path.isdir(path_adder(path, 'cities/%s/%s/%s' %(location, season, feeder))):
-            os.mkdir(path_adder(path, 'cities/%s/%s/%s' %(location, season, feeder)))
+        if not os.path.exists(path_adder(path,'outputs/%s/%s' %(location, season))):
+            os.mkdir(path_adder(path,'outputs/%s/%s' %(location, season)))
+        if not os.path.isdir(path_adder(path, 'outputs/%s/%s/%s' %(location, season, feeder))):
+            os.mkdir(path_adder(path, 'outputs/%s/%s/%s' %(location, season, feeder)))
         arr = season_dict[season]/sum(season_dict[season])
         #print(arr)
         #for i in range(len(arr)):
@@ -495,10 +495,10 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         #df.insert(0, 'Component', np.array(res_comp['component']))
         df.insert(0, 'Component', np.array(['MOTOR A', 'MOTOR B', 'MOTOR C', 'MOTOR D', 'POWER ELECTRONICS', 'CONSTANT IMPEDANCE', 'CONSTANT CURRENT']))
         #df = df.set_index('Component')
-        df.to_csv(path_adder(path, 'cities/%s/%s/%s/%s_%s_%s.csv' %(location, season, feeder, location, season, feeder)), index = False)
+        df.to_csv(path_adder(path, 'outputs/%s/%s/%s/%s_%s_%s.csv' %(location, season, feeder, location, season, feeder)), index = False)
         df = df.set_index('Component').T
         df.insert(0, 'Hour', df.index.values)
-        df.to_csv(path_adder(path, 'cities/%s/%s/%s/%s_%s_%s_transposed.csv' %(location, season, feeder, location, season, feeder)), index = False)
+        df.to_csv(path_adder(path, 'outputs/%s/%s/%s/%s_%s_%s_transposed.csv' %(location, season, feeder, location, season, feeder)), index = False)
         #plt.figure(figsize = (18,6))
         fig, ax = plt.subplots(1,2, figsize = (18,6))
         #plt.show()
@@ -514,7 +514,7 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         ax[1].set_xlabel('Hour of the day')
         ax[1].set_ylabel('Load (kW per sqft)')
         ax[1].set_xticks(np.arange(0,24,6))
-        plt.savefig(path_adder(path, 'cities/%s/%s/%s/%s_%s_%s.png' %(location, season, feeder, location, season, feeder)))
+        plt.savefig(path_adder(path, 'outputs/%s/%s/%s/%s_%s_%s.png' %(location, season, feeder, location, season, feeder)))
         plt.close()
 
 
@@ -525,7 +525,7 @@ if __name__ == "__main__":
     path = os.path.abspath(os.getcwd())
     config_settings = pd.read_csv(os.path.join(path, pathlib.Path('autotest/config.csv')), header = None).fillna('')
     config_settings = config_settings.rename(columns = {0: "Category", 1: "Values"})
-    cities = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
+    outputs = np.array(config_settings[config_settings["Category"] == 'City' ]['Values'])[0].split()
     seasons = np.array(config_settings[config_settings["Category"] == 'Season' ]['Values'])[0].split()
     ftype = np.array(config_settings[config_settings["Category"] == 'Feeder' ]['Values'])[0].split()
     debug = np.array(config_settings[config_settings["Category"] == 'Intermediate Results' ]['Values'])[0].split()
@@ -538,10 +538,10 @@ if __name__ == "__main__":
     with open(path_adder(path, setup_config.rbsa_path), 'rb') as file:
         rbsa_sens = pickle.load(file)
 
-    for city in cities:
+    for city in outputs:
         #city = city.lower()
-        if not os.path.isdir(f'cities/{city}'):
-            os.mkdir(f'cities/{city}')
+        if not os.path.isdir(f'outputs/{city}'):
+            os.mkdir(f'outputs/{city}')
         f = open(path_adder(path, setup_config.debug_path), "a")
         f.write(f'{city}\n')
         if 'weather' in debug:
@@ -554,7 +554,7 @@ if __name__ == "__main__":
             ax.set_ylabel('Heat Index (F)')
             ax.set_title(f'{city} Weather Profile')
             ax.legend()
-            plt.savefig(path_adder(path, f'cities/{city}/{city}_weather_profile.png'))
+            plt.savefig(path_adder(path, f'outputs/{city}/{city}_weather_profile.png'))
             plt.close()
         else:
             weather = weather_season(location = city, day = 'weekday', aws = True)
