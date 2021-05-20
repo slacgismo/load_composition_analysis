@@ -18,10 +18,10 @@ len_debug=$(wc -l < logs/debug_loc.txt)
 for i in $(seq 1 $len_file)
 do
 	f=$(awk NR==$i logs/file_loc.txt)
-	cp -r $f/outputs/*.csv $OPENFIDO_OUTPUT
+	cp -r $f/*.csv $OPENFIDO_OUTPUT
 done
 for i in $(seq 1 $len_debug)
 do
 	f=$(awk NR==$i debug_loc.txt)
-	cp -r $f/outputs/*.png $OPENFIDO_OUTPUT
+	cp -r $f/*.png $OPENFIDO_OUTPUT
 done
