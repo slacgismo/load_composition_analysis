@@ -7,8 +7,8 @@ set -e
 # print command to stderr before executing it:
 set -x
 
-echo "OPENFIDO_INPUT = $OPENFIDO_INPUT"
-echo "OPENFIDO_OUTPUT = $OPENFIDO_OUTPUT"
+echo "OPENFIDO_INPUT = $OPENFIDO_INPUT\n"
+echo "OPENFIDO_OUTPUT = $OPENFIDO_OUTPUT\n"
 
 python3 -m pip -q install -r requirements.txt
 cp $OPENFIDO_INPUT/config.csv $PWD
@@ -17,6 +17,7 @@ len_file=$(wc -l < file_loc.txt)
 len_debug=$(wc -l < debug_loc.txt)
 for i in $(seq 1 $len_file)
 do
+	echo " just f = $(awk NR==$i file_loc.txt)"
 	f=$(awk NR==$i file_loc.txt)
 	cp -r $f/*.csv $OPENFIDO_OUTPUT
 done
