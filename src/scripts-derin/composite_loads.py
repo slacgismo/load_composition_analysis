@@ -320,10 +320,6 @@ def comp_enduses(weather, ceus_sens, rbsa_sens, location, feeder, electrificatio
         location = 'ORD'
     feeder_comp = pd.read_csv(path_adder(path, setup_config.feeder_comp))
     sens = ceus_sens
-    #sens[0]['RES'] = rbsa_sens[0]['RES']
-    #winter_build = []
-    #spring_build = []
-    #summer_build = []
     com_load_dict = {}
     for btype in sens[0].keys():
 
