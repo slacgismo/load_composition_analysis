@@ -133,4 +133,7 @@ data/dlp*
 src/profiles.gif
 src/balance.png
 
-logs/*
+# Outputs of composite_loads
+*.png
+*.csv
+*.txt
