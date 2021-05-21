@@ -132,8 +132,3 @@ data/pge_loads.csv
 data/dlp*
 src/profiles.gif
 src/balance.png
-
-# Outputs of composite_loads
-*.png
-*.csv
-*.txt
