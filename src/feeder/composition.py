@@ -2,16 +2,26 @@
 """
 
 import pandas as pd
+from pathlib import Path
 
-feeder_component_indexes=["region","feeder_type","building_type"]
-feeder_component_data = ["floorarea_per_building","number_of_buildings","floorarea","composition"]
+rootdir = Path(__file__).parent.parent.parent
+
+feeder_component_indexes = ["region", "feeder_type", "building_type"]
+feeder_component_data = [
+    "floorarea_per_building",
+    "number_of_buildings",
+    "floorarea",
+    "composition",
+]
+
+
 def feeder_composition(
-        select={},
-        index=feeder_component_indexes,
-        columns=feeder_component_data,
-        convert=pd.DataFrame,
-        version='latest'
-        ):
+    select={},
+    index=feeder_component_indexes,
+    columns=feeder_component_data,
+    convert=pd.DataFrame,
+    version="latest",
+):
     """Get feeder composition data
 
     Feeder composition provides information about different economic activites
@@ -26,13 +36,12 @@ def feeder_composition(
 
     Returns: (DataFrame or convert)
     """
-    data = pd.read_csv(f"feeder_composition-{version}.csv")
-    for key,value in select.items():
-        data = data[data[key]==value]
+    data = pd.read_csv(str(rootdir) + f"/data/feeder/composition-{version}.csv")
+    for key, value in select.items():
+        data = data[data[key] == value]
     data["floorarea"] = data["floorarea_per_building"] * data["number_of_buildings"]
     data["composition"] = data["floorarea"] / sum(data["floorarea"])
     if index:
         return convert(data.set_index(index)[columns])
     else:
         return convert(data[columns])
-
