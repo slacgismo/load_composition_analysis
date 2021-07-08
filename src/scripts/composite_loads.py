@@ -304,7 +304,6 @@ def load_electrification(
     convert=pd.DataFrame,
     version="latest",
 ):
-    print(setup_config.electrification_data)
     data = pd.read_csv(path_adder(path, setup_config.electrification_data))
     for key, value in select.items():
         data = data[data[key] == value]
@@ -342,7 +341,6 @@ def weather_season(location, day, aws, showplots=False):
     summer_months = [6, 7, 8, 9]
     winter_months = [11, 12, 1, 2]
     if aws == True:
-        # print('aws')
         url = setup_config.aws_link % (location)
         r = requests.get(url, allow_redirects=True)
         open(path_adder(path, f"{location}.csv"), "wb").write(r.content)
@@ -917,8 +915,8 @@ if __name__ == "__main__":
             os.mkdir(f"{city}")
         f = open(path_adder(path, setup_config.debug_path), "a")
         f.write(f"{city}\n")
+        weather = weather_season(location=city, day="weekday", aws=True)
         if "weather" in debug:
-            weather = weather_season(location=city, day="weekday", aws=True)
             fig, ax = plt.subplots(figsize=(10, 8))
             ax.plot(weather[0], color="red", label="winter")
             ax.plot(weather[1], color="yellow", label="spring")
@@ -929,8 +927,6 @@ if __name__ == "__main__":
             ax.legend()
             plt.savefig(path_adder(path, f"{city}/{city}_weather_profile.png"))
             plt.close()
-        else:
-            weather = weather_season(location=city, day="weekday", aws=True)
         if len(ftype) == 0:
             print(
                 "You have not selected a feeder type. Please input one or more of the following options: Residential, Commercial, Mixed, Rural"
@@ -966,6 +962,5 @@ if __name__ == "__main__":
                     showplots=False,
                 )
             for season in seasons:
-                # season = season.lower()
                 f = open(path_adder(path, setup_config.file_path), "a")
                 f.write(f"{city}/{season.lower()}/{feeder}\n")
