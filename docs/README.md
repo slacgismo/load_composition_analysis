@@ -1,6 +1,6 @@
 Note: The Load Composition Analysis tools are currently under development.
 
-The load composition analysis tool is designed to be used with OpenFIDO.  To install OpenFIDO see http://help.openfido.org/.  
+The load composition analysis tool is designed to be used with OpenFIDO.  To install OpenFIDO see http://help.openfido.org/.
 
 ## Getting Started
 
@@ -8,7 +8,7 @@ The standard pipeline configuration is as follows:
 
 - Pipeline Name: `NERC Load Composition`
 
-- Description: `The load composition analysis tool provide composite load model (CLM) data for cities in NERC's annual planning studies.`
+- Description: `The load composition analysis tool provides composite load model (CLM) data for cities in NERC's annual planning studies.`
 
 - DockerHub Repository: `python:3`
 
@@ -34,3 +34,27 @@ The [[/Methodology/Overview]] document provides a high-level discussion of the L
 The [[/Methodology/Details]] document provides an in-depth discussion of the procedures and algorithms used in the Load Composition Analysis tools.
 
 The code is documented and demonstrated in the source folder.  See the Jupyter notebooks in the [source folder](https://github.com/slacgismo/load_composition_analysis/tree/master/src) for details.
+
+
+## Local development
+
+#### Entrypoint:
+
+From the head of the repo, run:
+
+```bash
+$ python src/scripts/composite_loads
+```
+
+This will default to running the script with /autotest/config.csv. In order to modify the input, create a new config.csv file with the same format and re run the code.
+
+#### Pre-Commit
+
+We make use of the pre-commit hooks to ensure pep8 standards. To activate the pre-commit hook run:
+
+```bash
+$ pip install pre-commit
+$ pre-commit install
+```
+
+Upon running the script locally, ensure the newly created files are not being pushed to the github repo.
