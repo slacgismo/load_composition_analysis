@@ -30,9 +30,9 @@
         "Residential", "Commercial", "Mixed", "Rural"
       ]
     },
-    "Intermediate" : {
+    "Intermediate Results" : {
       "optionsMulti" : [
-        "Results", "weather"
+        "weather", "loadshape"
       ]
     }
   }
