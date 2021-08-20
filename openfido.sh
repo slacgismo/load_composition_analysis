@@ -1,10 +1,18 @@
+# nounset: undefined variable outputs error message, and forces an exit
 set -u
+
+# errexit: abort script at first error
 set -e
+
+# print command to stderr before executing it:
 set -x
-pip -q install -r user_requirements.txt
-cp $OPENFIDO_INPUT/user_config.csv $PWD
-python path.py
-python src/scripts/composite_loads.py
+
+echo "OPENFIDO_INPUT = $OPENFIDO_INPUT\n"
+echo "OPENFIDO_OUTPUT = $OPENFIDO_OUTPUT\n"
+
+python3 -m pip -q install -r requirements.txt
+cp $OPENFIDO_INPUT/config.csv $PWD
+python3 src/scripts/composite_loads.py
 len_file=$(wc -l < file_loc.txt)
 len_debug=$(wc -l < debug_loc.txt)
 for i in $(seq 1 $len_file)

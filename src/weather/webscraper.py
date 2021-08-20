@@ -123,7 +123,7 @@ def file_requester(zipcodes_array, email_id):
                 driver.quit()
                 continue
 
-    return order_list#, zipcode_list, error_list, string
+    return order_list #, zipcode_list, error_list, string
 
 def file_downloader(orders, email_id):
     '''
@@ -134,15 +134,15 @@ def file_downloader(orders, email_id):
         order_id = i[1] #Extracts the order_id
         driver = webdriver.Chrome(config_user.chrome)
         driver.get(config_default.noaa_email + email + config_default.noaa_id + order_id) #Retrieves order status page
-        driver.get(config_default.noaa_order + order_id + ".csv")# Downloads csv file
+        driver.get(config_default.noaa_order + order_id + ".csv") # Downloads csv file
         #time.sleep(45) #Sleep time to allow file to download in case webdrconfig_default.idiver force closes window. Uncomment if required.
 
 def file_renamer(orders, wban_list, location_abbrev, file_suffix):
-'''
-Renames downloaded csv files. Takes as input the aforementioned order list, a list of wban_codes, a list of location codes and a file suffix.
-Ensure that wban_list and location_abbrev are sorted the same way. Ideally these will be extracted from the same dataset, so the sort
-should already be the same. The file suffix corresponds to the date range (199,200 or 201).
-'''
+    '''
+    Renames downloaded csv files. Takes as input the aforementioned order list, a list of wban_codes, a list of location codes and a file suffix.
+    Ensure that wban_list and location_abbrev are sorted the same way. Ideally these will be extracted from the same dataset, so the sort
+    should already be the same. The file suffix corresponds to the date range (199,200 or 201).
+    '''
     for i in orders:
         order_id = i[1]
         os.rename(Path(config_user.localdata + "\\" + order_id +".csv"),Path(config_user.localdata+"\\"+location_abbrev[list(wban_list).index(i[0])] + "-" + file_suffix +".csv"))
