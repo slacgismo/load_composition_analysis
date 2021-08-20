@@ -8,7 +8,7 @@ The standard pipeline configuration is as follows:
 
 - Pipeline Name: `NERC Load Composition`
 
-- Description: `The load composition analysis tool provide composite load model (CLM) data for cities in NERC's annual planning studies.`
+- Description: `The load composition analysis tool provides composite load model (CLM) data for cities in NERC's annual planning studies.`
 
 - DockerHub Repository: `python:3`
 
