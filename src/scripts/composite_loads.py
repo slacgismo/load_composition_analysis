@@ -885,7 +885,7 @@ if __name__ == "__main__":
 
     path = os.path.abspath(os.getcwd())
     config_settings = pd.read_csv(
-        os.path.join(path, pathlib.Path("tmp/input/*.csv")), header=None
+        os.path.join(path, pathlib.Path("*.csv")), header=None
     ).fillna("")
     config_settings = config_settings.rename(columns={0: "Category", 1: "Values"})
     outputs = np.array(
