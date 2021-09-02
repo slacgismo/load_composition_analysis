@@ -1,7 +1,8 @@
 {
   "config.csv" : {
-    "City": {
-      "optionsMulti": [
+    "City" : {
+      "type" : "optionsMulti",
+      "values" : [
         "ABI", "ALB", "AMA", "ATL", "AUS",
         "BDL", "BDR", "BFL", "BNA", "BOS", "BTW", "BUF", "BWI",
         "CHS", "CLE", "CLT", "CRP", "CRW", "CYS",
@@ -21,17 +22,20 @@
       ]
     },
     "Season" : {
-      "optionsMulti": [
+      "type" : "optionsMulti",
+      "values" : [
         "Spring", "Summer", "Fall", "Winter"
       ]
     },
     "Feeder" : {
-      "optionsMulti" : [
+      "type" : "optionsMulti",
+      "values" : [
         "Residential", "Commercial", "Mixed", "Rural"
       ]
     },
     "Intermediate Results" : {
-      "optionsMulti" : [
+      "type" : "optionsMulti",
+      "values" : [
         "weather", "loadshape"
       ]
     }
